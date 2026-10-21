@@ -1,11 +1,11 @@
 import Foundation
-import TestImpact
+import SwiftImpact
 
-// test-impact footprints <build-dir> <recordings-dir> <footprints.json>
+// swift-impact footprints <build-dir> <recordings-dir> <footprints.json>
 //   Indexes the build's objects and resolves each recording, a JSON file of
 //   {"unit": String, "functions": [UInt64], "sources": [String]?} that ImpactProbe's user wrote,
 //   to a footprint.
-// test-impact select <build-dir> <footprints.json>
+// swift-impact select <build-dir> <footprints.json>
 //   Prints each unit whose footprint changed in the build, and why, then a summary.
 
 func index(_ build: String) throws -> ObjectIndex {
@@ -60,7 +60,7 @@ case ("select", 3):
 default:
     FileHandle.standardError.write(
         Data(
-            "usage: test-impact footprints <build> <recordings> <out> | select <build> <footprints>\n"
+            "usage: swift-impact footprints <build> <recordings> <out> | select <build> <footprints>\n"
                 .utf8))
     exit(2)
 }

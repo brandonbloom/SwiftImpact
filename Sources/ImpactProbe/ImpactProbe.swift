@@ -8,7 +8,7 @@ import MachO
 /// `__llvm_prf_cnts` section, and a record per function in `__llvm_prf_data`. The probe reads them
 /// in place: ``reset()`` zeroes the counters, and ``executed()`` returns the name hash of every
 /// function whose counters moved since. The harness maps those hashes to source files with
-/// `TestImpact`.
+/// `SwiftImpact`.
 ///
 /// Counters are process-wide, so a process can measure one unit at a time. Work that runs
 /// concurrently with the unit is attributed to it too, which over-approximates its footprint.

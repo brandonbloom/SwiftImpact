@@ -1,6 +1,6 @@
 import Testing
 
-@testable import TestImpact
+@testable import SwiftImpact
 
 @Test func changesListsChangedAndMissingObjects() {
     var footprint = Footprint()
