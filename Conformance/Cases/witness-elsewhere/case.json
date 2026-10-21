@@ -1,0 +1,9 @@
+{
+    "summary": "A member added in another file becomes a type's witness, replacing a default implementation.",
+    "knownEscapes": [
+        {
+            "unit": "shows-tag",
+            "reason": "The witness table changes in Tag.o, which defines no instrumented code, so no footprint holds it; the conformance itself neither comes nor goes."
+        }
+    ]
+}

@@ -2,7 +2,7 @@
 
 Skip tests a change can't affect, for Swift.
 
-> **Spike.** Built to measure the approach with SwiftBook, its first consumer. See SwiftBook's `docs/spikes/swift-impact.md` for the design, the results, and the known gaps.
+> **Experimental.** Unpublished, and its interfaces will change. See [docs/coverage-plan.md](docs/coverage-plan.md) for how its safety is to be tested.
 
 A unit of work, such as a test or a snapshot render, runs in a process built with `-profile-generate`. `ImpactProbe` records which functions it runs. `SwiftImpact` maps those functions to the per-source-file objects of a SwiftPM build and fingerprints the objects. A later build can then tell which units it may change:
 - units whose objects changed;
@@ -26,3 +26,7 @@ let affected = ledger.affected(in: try ObjectIndex(objects: …, relativeTo: bui
 ```
 
 Counters are per process, so measure one unit at a time.
+
+## Conformance
+
+`swift run swift-impact-conformance` builds each case in `Conformance/Cases` before and after its edit, and checks that selection chooses every unit whose behaviour changed. The results by toolchain are in [docs/compatibility.md](docs/compatibility.md); the plan for coverage is in [docs/coverage-plan.md](docs/coverage-plan.md).

@@ -16,6 +16,11 @@ let package = Package(
         .target(name: "ImpactProbe"),
         .target(name: "SwiftImpact"),
         .executableTarget(name: "swift-impact", dependencies: ["SwiftImpact"]),
+        // Runs the conformance cases in Conformance/Cases.
+        .target(name: "ImpactConformance", dependencies: ["SwiftImpact"]),
+        .executableTarget(
+            name: "swift-impact-conformance", dependencies: ["ImpactConformance"]),
         .testTarget(name: "SwiftImpactTests", dependencies: ["SwiftImpact"]),
+        .testTarget(name: "ImpactConformanceTests", dependencies: ["ImpactConformance"]),
     ]
 )

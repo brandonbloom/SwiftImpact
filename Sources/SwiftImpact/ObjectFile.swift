@@ -116,14 +116,16 @@ struct ObjectFile {
         }
     }
 
-    /// A hash of what the object does, ignoring debug info: each section's bytes and relocations,
-    /// with relocations naming their symbols rather than indexing them.
+    /// A hash of what the object does: each section's bytes and relocations, with relocations
+    /// naming their symbols rather than indexing them. It ignores debug info, and the compiler's
+    /// hash of its inputs (`__LLVM,__swift_modhash`), which changes when a file joins the module.
     ///
     /// Recompiling an unchanged source file reproduces it. Moving code to other lines changes it,
     /// since the source location reaches code through `#fileID`, `#line`, and macro expansions.
     var fingerprint: String {
         var total = SHA256()
-        for section in sections where section.segment != "__DWARF" {
+        for section in sections
+        where section.segment != "__DWARF" && section.name != "__swift_modhash" {
             var hash = SHA256()
             hash.update(data: Data("\(section.segment),\(section.name)".utf8))
             if !section.isZeroFill {
