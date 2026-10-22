@@ -98,7 +98,7 @@ public struct Case: Sendable {
                 platforms: [.macOS("15.0")],
                 targets: [
                     .target(name: "ImpactProbe"),
-                    .target(name: "ImpactCase"),
+                    .target(name: "ImpactCase", dependencies: ["ImpactProbe"]),
             \(targets.joined(separator: "\n"))
                     .target(
                         name: "Units",

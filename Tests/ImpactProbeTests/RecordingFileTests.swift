@@ -1,10 +1,19 @@
+import Foundation
 import Testing
 
 @testable import ImpactProbe
 
-@Test func quotesJSONStrings() {
-    #expect(quoted("plain") == "\"plain\"")
-    #expect(quoted("a \"b\" \\ c\n\u{1}") == "\"a \\\"b\\\" \\\\ c\\n\\u0001\"")
+@Test func encodesARecording() throws {
+    let file = RecordingFile(
+        test: "t", declaredIn: nil, dependsOn: ["shared"], images: ["U"], functions: [1, 2])
+    let json = try #require(
+        JSONSerialization.jsonObject(with: JSONEncoder().encode(file)) as? [String: Any])
+    #expect(json["version"] as? Int == 1)
+    #expect(json["test"] as? String == "t")
+    #expect(json["declaredIn"] == nil)
+    #expect(json["dependsOn"] as? [String] == ["shared"])
+    #expect(json["images"] as? [String] == ["U"])
+    #expect(json["functions"] as? [UInt64] == [1, 2])
 }
 
 @Test func formatsUUIDs() {

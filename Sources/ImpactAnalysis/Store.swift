@@ -4,7 +4,16 @@ import Foundation
 /// SwiftImpact's state for one build directory, kept in it as a cache of the build:
 /// `impact/recordings`, where probes save recordings, and `impact/snapshots`, where analyses
 /// save what each build they saw was.
+///
+/// Several harnesses may use one build directory at once, such as a macOS and an iOS job. Every
+/// file is written atomically, under a name of its own, and a file another harness may still
+/// need is removed only once it's older than ``gracePeriod``.
 struct Store {
+    /// How long a file that seems unneeded is kept. Another harness may have just saved a
+    /// snapshot its tests are about to record against, or be writing files in a format this
+    /// version can't read.
+    static let gracePeriod: TimeInterval = 60 * 60
+
     let directory: URL
 
     init(buildDirectory: URL) {
@@ -14,14 +23,17 @@ struct Store {
     var recordings: URL { directory.appending(path: "recordings") }
     var snapshotsDirectory: URL { directory.appending(path: "snapshots") }
 
-    /// Saves `snapshots` that aren't saved yet.
+    /// Saves `snapshots`, or marks them as fresh if they're saved already.
     func save(_ snapshots: [Snapshot]) throws {
-        try FileManager.default.createDirectory(
-            at: snapshotsDirectory, withIntermediateDirectories: true)
+        let fileManager = FileManager.default
+        try fileManager.createDirectory(at: snapshotsDirectory, withIntermediateDirectories: true)
         for snapshot in snapshots {
             let url = snapshotsDirectory.appending(path: "\(snapshot.key).json")
-            if FileManager.default.fileExists(atPath: url.path) { continue }
-            try JSONEncoder().encode(snapshot).write(to: url, options: .atomic)
+            if fileManager.fileExists(atPath: url.path) {
+                try? fileManager.setAttributes([.modificationDate: Date()], ofItemAtPath: url.path)
+            } else {
+                try JSONEncoder().encode(snapshot).write(to: url, options: .atomic)
+            }
         }
     }
 
@@ -33,22 +45,32 @@ struct Store {
                     Snapshot.self, from: Data(contentsOf: url)),
                 snapshot.version == Snapshot.version
             else {
-                try? FileManager.default.removeItem(at: url)
+                removeIfStale(url)
                 return nil
             }
             return snapshot
         }
     }
 
-    /// Removes the saved snapshots whose keys aren't in `keys`.
+    /// Removes the stale saved snapshots whose keys aren't in `keys`.
     func removeSnapshots(except keys: Set<String>) {
         for url in files(in: snapshotsDirectory)
         where !keys.contains(url.deletingPathExtension().lastPathComponent) {
-            try? FileManager.default.removeItem(at: url)
+            removeIfStale(url)
         }
     }
 
-    /// The latest recording of each test, by test. Removes older recordings, and any this
+    /// Removes the file at `url` if it's older than ``gracePeriod``.
+    func removeIfStale(_ url: URL, now: Date = Date()) {
+        guard
+            let modified = try? url.resourceValues(forKeys: [.contentModificationDateKey])
+                .contentModificationDate,
+            now.timeIntervalSince(modified) > Self.gracePeriod
+        else { return }
+        try? FileManager.default.removeItem(at: url)
+    }
+
+    /// The latest recording of each test, by test. Removes older recordings, and stale ones this
     /// version of SwiftImpact can't read.
     func latestRecordings() -> [String: Recording] {
         var latest: [String: (recording: Recording, url: URL)] = [:]
@@ -58,7 +80,7 @@ struct Store {
                     Recording.self, from: Data(contentsOf: url)),
                 recording.version == Recording.version
             else {
-                try? FileManager.default.removeItem(at: url)
+                removeIfStale(url)
                 continue
             }
             if let previous = latest[recording.test] {
@@ -89,7 +111,9 @@ struct Recording: Decodable {
 
     let version: Int
     let test: String
-    let declaredIn: String
+    let declaredIn: String?
+    /// The other recordings the test depends on.
+    let dependsOn: [String]
     /// When it was saved, in nanoseconds since 1970.
     let time: UInt64
     /// The `LC_UUID`s of the instrumented images the test ran in.

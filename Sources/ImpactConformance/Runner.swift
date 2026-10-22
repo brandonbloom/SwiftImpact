@@ -21,7 +21,7 @@ public struct UnitResult: Codable, Sendable {
     public var changed: Bool
     /// Whether the analysis said it needed to run, and why.
     public var selected: Bool
-    public var reason: String?
+    public var reasons: [String]
 
     public var escaped: Bool { changed && !selected }
 }
@@ -54,6 +54,8 @@ public struct Runner: Sendable {
         var files = [
             "Sources/ImpactCase/Unit.swift":
                 try read(supportDirectory.appending(path: "ImpactCase/Unit.swift")),
+            "Sources/ImpactCase/Shared.swift":
+                try read(supportDirectory.appending(path: "ImpactCase/Shared.swift")),
             "Sources/Harness/main.swift":
                 try read(supportDirectory.appending(path: "Harness/main.swift")),
         ]
@@ -103,10 +105,12 @@ public struct Runner: Sendable {
         let unchanged = try ImpactAnalysis.analyze(workspace.buildDirectory)
         for mode in Mode.allCases {
             for unit in names {
-                if let reason = unchanged.reasonToRun("\(unit)@\(mode.rawValue)") {
+                let reasons = unchanged.reasonsToRun("\(unit)@\(mode.rawValue)")
+                if !reasons.isEmpty {
                     throw CaseError(
                         name: testCase.name,
-                        problem: "\(unit)@\(mode.rawValue) needs to run before the edit: \(reason)")
+                        problem: "\(unit)@\(mode.rawValue) needs to run before the edit: "
+                            + reasons.joined(separator: "; "))
                 }
             }
         }
@@ -121,10 +125,10 @@ public struct Runner: Sendable {
         var result = CaseResult(units: [:], divergent: [])
         for mode in Mode.allCases {
             result.units[mode] = names.map { unit in
-                let reason = analysis.reasonToRun("\(unit)@\(mode.rawValue)")
+                let reasons = analysis.reasonsToRun("\(unit)@\(mode.rawValue)")
                 return UnitResult(
                     unit: unit, changed: after[mode]![unit] != before[mode]![unit],
-                    selected: reason != nil, reason: reason)
+                    selected: !reasons.isEmpty, reasons: reasons)
             }
         }
 

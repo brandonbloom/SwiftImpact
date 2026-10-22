@@ -4,12 +4,12 @@ What selection can miss, what it over-selects, and what a harness must handle it
 
 ## Overview
 
-An analysis is safe when every test whose behaviour changes needs to run. SwiftImpact's conformance suite checks that across kinds of edit, and its results are in the repository's `docs/compatibility.md`. The gaps below are known; some have cases recording them. <doc:HowItWorks> explains the mechanisms they refer to.
+An analysis is safe when every test whose behaviour changes is impacted. SwiftImpact's conformance suite checks that across kinds of edit, and its results are in the repository's `docs/compatibility.md`. The gaps below are known; some have cases recording them. <doc:HowItWorks> explains the mechanisms they refer to.
 
 ### Code without counters
 
 A footprint holds the objects whose instrumented code a test ran. Code with no counters is invisible to it:
-- **Code macros generate**, such as `#Preview` bodies, `@Observable` accessors, and test registrations. Name the declaring file in `sources` (see <doc:Adopting>); generated code in other files is still unseen.
+- **Code macros generate**, such as `#Preview` bodies, `@Observable` accessors, and test registrations. Pass the file declaring each test as `declaredIn` when starting its probe (see <doc:Adopting>); generated code in other files is still unseen.
 - **Code the compiler synthesizes**: implicit initializers, synthesized conformances, thunks, witness tables, and metadata.
 - **C, Objective-C, and prebuilt binaries.**
 
@@ -23,11 +23,12 @@ Global variables and conformances found at runtime are covered by rules of their
 
 - **Resources:** asset catalogs, bundled files, fonts, and localizations.
 - **The runtime environment:** the OS or simulator runtime, environment variables, and the harness's own settings. Changes to the toolchain and SDK show up in the build, but these don't. Include any that affect a test's result in its identifier, such as `"CardView/iPhone/iOS-18"`.
-- **Inputs from outside the build:** files, network responses, the clock, and state other processes leave behind.
+- **Inputs from outside the build:** reference images, fixtures and other files, network responses, the clock, and state other processes leave behind. A harness can track the inputs it knows about itself; see <doc:Adopting>.
 
 ### The process under test
 
 - **Parallel tests over-select.** Counters are per process, so everything that runs in a process while a test is recorded, including other tests, is attributed to it. That's safe, but the more tests overlap in one process, the more each selects. Running tests in parallel processes keeps them precise.
+- **Work shared across tests.** Work done once per process and reused, such as a cached context, is recorded only by the test that happened to do it. Other tests that use it are impacted by changes to it only if they name its recording in `dependsOn`; see <doc:Adopting>.
 - **Work that outlives a test.** Code that runs after a test's probe stops, in work the test started, isn't attributed to the test. If it finishes before the next test begins, no recording includes it, and a later test that reads its results can be skipped wrongly. Wait for a test's work before stopping its probe.
 - **Counters aren't atomic.** LLVM's instrumentation increments counters without synchronization. If a thread is preempted in the middle of an increment for the whole of a test, its late write can restore the count the test started with, hiding a function the test ran. The window is narrow but real for tests recorded in parallel.
 - **The profile format is LLVM's**, version 10 of its per-function records (LLVM 19 and later). If the records don't have the layout it expects, the probe records nothing and says why on standard error, and the tests run next time.
@@ -35,8 +36,10 @@ Global variables and conformances found at runtime are covered by rules of their
 ### The build
 
 - **SwiftPM's layout.** An analysis reads the per-file objects and linked products of SwiftPM's build system, under `out/Intermediates.noindex` and `out/Products`. Other build systems, such as `xcodebuild`, are untested.
+- **Platforms.** macOS, and the iOS simulator sharing a build directory with it, are verified. tvOS and visionOS simulators are untested. On a physical device, the probe can't reach the host's build directory, so it records nothing.
 - **Incremental builds are trusted.** If the build fails to rebuild a file whose meaning an edit changed, selection misses it too.
 - **Paths are part of the code.** File-private functions' profile names include their source path, so moving the checkout changes every object and selects every test.
+- **Retired identifiers linger.** An analysis keeps only each test's latest recording, but a test whose identifier is never used again keeps its recording in the build directory until the directory is cleared. Identifiers that include a runtime version leave one behind with each update.
 
 ### Over-selection
 

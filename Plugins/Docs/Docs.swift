@@ -1,10 +1,15 @@
 import Foundation
 import PackagePlugin
 
-/// `swift package docs`: builds the documentation of each library's modules, and merges it into
-/// one archive. Serve the archive's directory over HTTP to browse it.
+/// `swift package docs [--hosting-base-path <path>]`: builds the documentation of each library's
+/// modules, and merges it into one archive. Serve the archive's directory over HTTP to browse it.
+///
+/// With `--hosting-base-path`, the archive is made for a static host serving it under that path,
+/// such as `/SwiftImpact` on GitHub Pages, and its root redirects to the documentation.
 @main struct Docs: CommandPlugin {
     func performCommand(context: PluginContext, arguments: [String]) async throws {
+        var extractor = ArgumentExtractor(arguments)
+        let hostingBasePath = extractor.extractOption(named: "hosting-base-path").last
         let docc = try context.tool(named: "docc").url
         let output = context.pluginWorkDirectoryURL
         var modules: [SwiftSourceModuleTarget] = []
@@ -36,7 +41,23 @@ import PackagePlugin
         }
         let combined = output.appending(path: "\(context.package.displayName).doccarchive")
         try? FileManager.default.removeItem(at: combined)
-        try run(docc, ["merge"] + archives + ["--output-path", combined.path])
+        try run(
+            docc,
+            ["merge"] + archives + [
+                "--output-path", combined.path,
+                "--synthesized-landing-page-name", context.package.displayName,
+            ])
+        if let hostingBasePath {
+            try run(
+                docc,
+                [
+                    "process-archive", "transform-for-static-hosting", combined.path,
+                    "--hosting-base-path", hostingBasePath,
+                ])
+            try #"<meta http-equiv="refresh" content="0; url=documentation/">"#
+                .write(
+                    to: combined.appending(path: "index.html"), atomically: true, encoding: .utf8)
+        }
         print("Built \(combined.path)")
         print("Browse it with: python3 -m http.server --directory '\(combined.path)'")
     }

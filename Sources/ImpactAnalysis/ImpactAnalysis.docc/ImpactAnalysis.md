@@ -6,7 +6,7 @@ Run only the tests a change can affect.
 
 Most changes touch a small part of a codebase, yet a test suite reruns everything. That's tolerable for fast unit tests and costly for slow ones: snapshot renders, UI tests, and integration tests that take seconds each.
 
-SwiftImpact learns what each test actually exercises, by watching it run. After you change the code, it tells your test runner which tests could now behave differently, and why. The runner runs those and skips the rest.
+SwiftImpact learns what each test actually exercises, by watching it run. After you change the code, it tells your test runner which tests could now behave differently. The runner runs those and skips the rest.
 
 - **Driven by what runs, not by guesses.** It doesn't infer dependencies from imports or file names; it records the code each test executed, down to the source file.
 - **Driven by what the compiler built.** It compares compiled output, so it notices when an edit in one file changes the meaning of code in another, and usually ignores edits, such as to comments, that change nothing the compiler emits.

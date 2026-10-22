@@ -1,0 +1,13 @@
+{
+    "summary": "Units use work computed once per process and cached, without declaring it; the work's code changes.",
+    "knownEscapes": [
+        {
+            "unit": "second",
+            "modes": [
+                "shared",
+                "parallel"
+            ],
+            "reason": "'first' computed the shared work and recorded its code; 'second' used the cached value, ran none of that code, and didn't declare the dependency."
+        }
+    ]
+}

@@ -1,0 +1,3 @@
+{
+    "summary": "Units declare that they depend on work computed once per process and cached; the work's code changes."
+}

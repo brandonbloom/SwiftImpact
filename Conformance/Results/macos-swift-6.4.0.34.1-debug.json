@@ -8,12 +8,17 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Units\/Greeting.swift changed",
+            "reasons" : [
+              "Units\/Greeting.swift changed"
+            ],
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -21,12 +26,17 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Units\/Greeting.swift changed",
+            "reasons" : [
+              "Units\/Greeting.swift changed"
+            ],
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -34,12 +44,17 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Units\/Greeting.swift changed",
+            "reasons" : [
+              "Units\/Greeting.swift changed"
+            ],
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -54,11 +69,17 @@
         "isolated" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -66,11 +87,17 @@
         "parallel" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -78,11 +105,17 @@
         "shared" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -97,12 +130,17 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "the conformance Units.Tag : Swift.CustomStringConvertible came or went",
+            "reasons" : [
+              "the conformance Units.Tag : Swift.CustomStringConvertible came or went"
+            ],
             "selected" : true,
             "unit" : "describes-tag"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -110,12 +148,17 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "the conformance Units.Tag : Swift.CustomStringConvertible came or went",
+            "reasons" : [
+              "the conformance Units.Tag : Swift.CustomStringConvertible came or went"
+            ],
             "selected" : true,
             "unit" : "describes-tag"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -123,12 +166,17 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "the conformance Units.Tag : Swift.CustomStringConvertible came or went",
+            "reasons" : [
+              "the conformance Units.Tag : Swift.CustomStringConvertible came or went"
+            ],
             "selected" : true,
             "unit" : "describes-tag"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -143,12 +191,17 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Library\/Greeting.swift changed",
+            "reasons" : [
+              "Library\/Greeting.swift changed"
+            ],
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -156,12 +209,17 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Library\/Greeting.swift changed",
+            "reasons" : [
+              "Library\/Greeting.swift changed"
+            ],
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -169,12 +227,17 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Library\/Greeting.swift changed",
+            "reasons" : [
+              "Library\/Greeting.swift changed"
+            ],
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -189,16 +252,25 @@
         "isolated" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "warms"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "reads"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -206,16 +278,25 @@
         "parallel" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "warms"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "reads"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -223,16 +304,25 @@
         "shared" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "warms"
           },
           {
             "changed" : true,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "reads"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -247,18 +337,25 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Units\/Banner.swift changed",
+            "reasons" : [
+              "Units\/Banner.swift changed"
+            ],
             "selected" : true,
             "unit" : "first"
           },
           {
             "changed" : true,
-            "reason" : "Units\/Banner.swift changed",
+            "reasons" : [
+              "Units\/Banner.swift changed"
+            ],
             "selected" : true,
             "unit" : "second"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -266,18 +363,25 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Units\/Banner.swift changed",
+            "reasons" : [
+              "Units\/Banner.swift changed"
+            ],
             "selected" : true,
             "unit" : "first"
           },
           {
             "changed" : true,
-            "reason" : "Units\/Banner.swift changed",
+            "reasons" : [
+              "Units\/Banner.swift changed"
+            ],
             "selected" : true,
             "unit" : "second"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -285,18 +389,25 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Units\/Banner.swift changed",
+            "reasons" : [
+              "Units\/Banner.swift changed"
+            ],
             "selected" : true,
             "unit" : "first"
           },
           {
             "changed" : true,
-            "reason" : "Units\/Banner.swift changed",
+            "reasons" : [
+              "Units\/Banner.swift changed"
+            ],
             "selected" : true,
             "unit" : "second"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -311,12 +422,17 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Units\/Location.swift changed",
+            "reasons" : [
+              "Units\/Location.swift changed"
+            ],
             "selected" : true,
             "unit" : "locates"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -324,12 +440,17 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Units\/Location.swift changed",
+            "reasons" : [
+              "Units\/Location.swift changed"
+            ],
             "selected" : true,
             "unit" : "locates"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -337,12 +458,17 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Units\/Location.swift changed",
+            "reasons" : [
+              "Units\/Location.swift changed"
+            ],
             "selected" : true,
             "unit" : "locates"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -357,11 +483,17 @@
         "isolated" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -369,11 +501,17 @@
         "parallel" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -381,11 +519,17 @@
         "shared" : [
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -400,12 +544,17 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Units\/Model.swift changed",
+            "reasons" : [
+              "Units\/Model.swift changed"
+            ],
             "selected" : true,
             "unit" : "reads-count"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -413,12 +562,17 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Units\/Model.swift changed",
+            "reasons" : [
+              "Units\/Model.swift changed"
+            ],
             "selected" : true,
             "unit" : "reads-count"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -426,12 +580,17 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Units\/Model.swift changed",
+            "reasons" : [
+              "Units\/Model.swift changed"
+            ],
             "selected" : true,
             "unit" : "reads-count"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -446,12 +605,17 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Units\/Compute.swift changed",
+            "reasons" : [
+              "Units\/Compute.swift changed"
+            ],
             "selected" : true,
             "unit" : "computes"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -459,12 +623,17 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Units\/Compute.swift changed",
+            "reasons" : [
+              "Units\/Compute.swift changed"
+            ],
             "selected" : true,
             "unit" : "computes"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -472,12 +641,17 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Units\/Compute.swift changed",
+            "reasons" : [
+              "Units\/Compute.swift changed"
+            ],
             "selected" : true,
             "unit" : "computes"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -492,18 +666,25 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Units\/Callers.swift changed",
+            "reasons" : [
+              "Units\/Callers.swift changed"
+            ],
             "selected" : true,
             "unit" : "describes-int"
           },
           {
             "changed" : false,
-            "reason" : "Units\/Callers.swift changed",
+            "reasons" : [
+              "Units\/Callers.swift changed"
+            ],
             "selected" : true,
             "unit" : "describes-string"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -511,18 +692,25 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Units\/Callers.swift changed",
+            "reasons" : [
+              "Units\/Callers.swift changed"
+            ],
             "selected" : true,
             "unit" : "describes-int"
           },
           {
             "changed" : false,
-            "reason" : "Units\/Callers.swift changed",
+            "reasons" : [
+              "Units\/Callers.swift changed"
+            ],
             "selected" : true,
             "unit" : "describes-string"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -530,18 +718,25 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Units\/Callers.swift changed",
+            "reasons" : [
+              "Units\/Callers.swift changed"
+            ],
             "selected" : true,
             "unit" : "describes-int"
           },
           {
             "changed" : false,
-            "reason" : "Units\/Callers.swift changed",
+            "reasons" : [
+              "Units\/Callers.swift changed"
+            ],
             "selected" : true,
             "unit" : "describes-string"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -556,17 +751,25 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Units\/Value.swift changed",
+            "reasons" : [
+              "Units\/Value.swift changed"
+            ],
             "selected" : true,
             "unit" : "early"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "late"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -574,17 +777,25 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Units\/Value.swift changed",
+            "reasons" : [
+              "Units\/Value.swift changed"
+            ],
             "selected" : true,
             "unit" : "early"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "late"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -592,17 +803,25 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Units\/Value.swift changed",
+            "reasons" : [
+              "Units\/Value.swift changed"
+            ],
             "selected" : true,
             "unit" : "early"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "late"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -617,12 +836,17 @@
         "isolated" : [
           {
             "changed" : true,
-            "reason" : "Units\/Settings.swift changed",
+            "reasons" : [
+              "Units\/Settings.swift changed"
+            ],
             "selected" : true,
             "unit" : "reads-size"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -630,12 +854,17 @@
         "parallel" : [
           {
             "changed" : true,
-            "reason" : "Units\/Settings.swift changed",
+            "reasons" : [
+              "Units\/Settings.swift changed"
+            ],
             "selected" : true,
             "unit" : "reads-size"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -643,12 +872,191 @@
         "shared" : [
           {
             "changed" : true,
-            "reason" : "Units\/Settings.swift changed",
+            "reasons" : [
+              "Units\/Settings.swift changed"
+            ],
             "selected" : true,
             "unit" : "reads-size"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ]
+      }
+    },
+    "shared-work" : {
+      "divergent" : [
+
+      ],
+      "units" : {
+        "isolated" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed",
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed",
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed",
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "shared" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed",
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ]
+      }
+    },
+    "shared-work-undeclared" : {
+      "divergent" : [
+
+      ],
+      "units" : {
+        "isolated" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed"
+            ],
+            "selected" : true,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "shared" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -663,11 +1071,17 @@
         "isolated" : [
           {
             "changed" : true,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "shows-tag"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -675,11 +1089,17 @@
         "parallel" : [
           {
             "changed" : true,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "shows-tag"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -687,11 +1107,17 @@
         "shared" : [
           {
             "changed" : true,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "shows-tag"
           },
           {
             "changed" : false,
+            "reasons" : [
+
+            ],
             "selected" : false,
             "unit" : "adds"
           }

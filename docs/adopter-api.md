@@ -4,7 +4,7 @@ SwiftImpact answers one question for a test harness:
 
 > **Does this test's last result still hold for the code as it's built now?**
 
-If it does, the harness can skip the test. If not, it runs it, and a person may want to know why.
+If it does, the harness can skip the test; if not, it runs it.
 
 ## API
 
@@ -13,11 +13,17 @@ If it does, the harness can skip the test. If not, it runs it, and a person may 
 
 /// A test being recorded.
 public struct ImpactProbe: Sendable {
-    /// Starts recording `test`, declared in the file with `#fileID` `fileID`.
+    /// Starts recording `test`, declared in the file with `#fileID` `fileID`, or `nil` if that
+    /// isn't known.
+    ///
+    /// `dependsOn` names other recordings the test depends on, such as of shared work; the test
+    /// is impacted whenever one of them is, or has no recording.
     ///
     /// Records nothing unless the process was launched with `ImpactAnalysis.environment(for:)`
     /// and built with `ImpactAnalysis.buildArguments`.
-    public static func start(test: String, declaredIn fileID: String) -> ImpactProbe
+    public static func start(
+        test: String, declaredIn fileID: String?, dependsOn: [String] = []
+    ) -> ImpactProbe
 
     /// Stops recording and saves what the test ran. Wait for any work the test started first.
     public func stop()
@@ -37,8 +43,13 @@ public struct ImpactAnalysis: Sendable {
     /// it. Throws if the build can't be read; then run every test.
     public static func analyze(_ buildDirectory: URL) throws -> ImpactAnalysis
 
-    /// Why `test` needs to run, for a person to read; `nil` if its last result still holds.
-    public func reasonToRun(_ test: String) -> String?
+    /// Whether a change may have impacted `test`, so it needs to run: `true` unless its last
+    /// result still holds, including for a test the analysis knows nothing about.
+    public func isImpacted(_ test: String) -> Bool
+
+    /// Why `test` is impacted or not, for a person to read. For display only: the wording may
+    /// change, so don't parse it.
+    public func explain(_ test: String) -> String
 }
 ```
 
@@ -47,16 +58,19 @@ public struct ImpactAnalysis: Sendable {
 - **Tests** are identified by strings the harness chooses, stable from run to run. An identifier includes everything that changes what the test does: a snapshot rendered on two devices is two tests, such as `"CardView/iPhone"` and `"CardView/iPad"`.
 - **A recording** is what one test ran, and the file declaring it. The probe saves it in the build directory.
 - **An analysis** is a view of one build: what each recorded test depended on, compared with what's built now.
-- **Results** are the harness's. A `nil` reason means a test's last result holds, whether it passed or failed; what to do about a failure is the harness's policy.
+- **Results** are the harness's. A test that isn't impacted has a last result that still holds, whether it passed or failed; what to do about a failure is the harness's policy.
 
 ## Behaviour
 
 - **The probe attaches itself** the first time a test starts in a process. If the process isn't instrumented, or wasn't launched with the analysis's environment, probes record nothing.
 - **Probes can overlap.** Each records everything that ran in its process while it was started, so tests that run at once in one process each depend on what the others ran. That selects more tests, never fewer.
+- **Platforms share a build directory.** Each configuration in it, such as `Debug` and `Debug-iphonesimulator`, is snapshotted separately. A simulator writes recordings to the host's file system; launched with `xcrun simctl`, it needs the environment's variables prefixed with `SIMCTL_CHILD_`.
+- **Harnesses can share a build directory.** Each file is written atomically under a name of its own, and a snapshot or unreadable file is removed only once it's an hour old, so a concurrent harness's newer files survive until they're needed or stale.
 - **State lives in the build directory**, under `impact/`, as a cache of that build. Clearing the build clears it, and every test runs.
 - **The cycle is build, analyze, run.** Each analysis records the build its run is about to use, which the next analysis needs to make sense of that run's recordings.
+- **Shared work is a recording of its own.** Work done once per process and reused by several tests, such as a cached context, runs inside at most one test's recording. Recording it under its own identifier, and naming that identifier in each dependent test's `dependsOn`, makes the dependents impacted whenever it is.
 - **Everything uncertain means "run it":**
-  - a test with no recording;
+  - a test with no recording, or depending on a recording that doesn't exist;
   - a recording made in a build no analysis saw, or that doesn't fully resolve;
   - a build that can't be read, from `analyze` throwing.
 
@@ -71,9 +85,7 @@ The documentation's How It Works and Limitations articles cover the selection ru
 
 ## Open questions
 
-- **Concurrent analyses.** Two harnesses analyzing one build directory at once need atomic writes: one file per recording, each written by rename, should be enough.
-- **Pruning.** Recordings of deleted tests, and snapshots no recording needs, should be dropped by each analysis.
-- **Work shared across tests**, such as a context computed once and reused, runs outside every test's recording. A recording under its own name, and a way to declare that tests depend on it, would cover it.
+- **Retired identifiers.** An analysis drops recordings that newer ones replaced, and snapshots nothing needs, but a test never run again keeps its recording until the build directory is cleared. Dropping those needs the harness to say which tests exist, or an age limit.
 - **A Swift Testing trait** could record each test and find the build directory itself, making adoption for `swift test` close to one line. It would ship as a third module.
 
 ## Alternatives considered
@@ -83,7 +95,7 @@ The documentation's How It Works and Limitations articles cover the selection ru
 - **Handing recordings to the harness to carry.** The process under test is usually not the harness, so the adopter would have to serialize and transport an opaque value. The build directory is already shared between the two.
 - **A harness-declared environment.** Changes to the toolchain and SDK are visible in the build. Settings only the harness knows belong in test identifiers, where they also keep results for different settings apart.
 - **Recording outcomes**, so failed tests are always selected. Whether to trust a past failure is harness policy, and a harness that keeps no results can rerun its last failures as most runners already do.
-- **Structured reasons.** Code only needs whether to run a test; a person needs a sentence.
+- **Structured reasons in the API**, as a list or an enum of causes. Code only needs whether to run a test, and people need a sentence; `explain` gives one, with no promise about its wording.
 - **Separate build and graph types**, the graph persisted by the harness and the build indexed per run. Keeping state in the build directory lets one value answer for both.
 - **A query by source file**, such as "which tests depend on this file?". Changes reach tests through files an edit didn't touch, when the compiler rebuilds them, so a file-based answer would miss what comparing builds catches.
 

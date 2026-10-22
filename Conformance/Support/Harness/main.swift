@@ -29,7 +29,8 @@ let mode = arguments[1]
 let outputs = Outputs()
 
 func run(_ unit: ImpactCase.Unit) {
-    let probe = ImpactProbe.start(test: "\(unit.name)@\(mode)", declaredIn: unit.fileID)
+    let probe = ImpactProbe.start(
+        test: "\(unit.name)@\(mode)", declaredIn: unit.fileID, dependsOn: unit.dependsOn)
     let output = unit.run()
     probe.stop()
     outputs.append(Output(unit: unit.name, output: output))
