@@ -59,9 +59,10 @@ The suite lives in `Conformance/`, and `swift run swift-impact-conformance [<cas
 4. classifies every unit and checks the case's known escapes;
 5. rebuilds the *after* side from clean and reports any object whose fingerprint differs from the incremental build's (`--no-clean-check` skips this).
 
-Units run in two **modes**, each a column of the table:
-- **shared:** every unit in one process, in order, as a test runner would. A unit can depend on state an earlier one set up, such as an initialized global.
+Units run in three **modes**, each a column of the table:
+- **shared:** every unit in one process, in order, as a test runner would. A unit can depend on state an earlier one set up, such as an initialized global. A case can ask for a pause between units.
 - **isolated:** each unit in a process of its own.
+- **parallel:** every unit in one process at once, each on its own thread and starting 20 ms after the one before, as a parallel test runner would.
 
 Results go to `Conformance/Results/<environment>.json`, which is checked in, and the runner regenerates `docs/compatibility.md` from every results file. The diff of either shows a change in precision, so neither needs a hand-kept baseline. The runner exits nonzero if a unit escaped that isn't a known gap, a known gap closed, or the builds diverged.
 

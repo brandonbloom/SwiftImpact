@@ -18,19 +18,17 @@ The probe reads the instrumentation's counters in memory and never needs a profi
 
 ### Record each unit
 
-Link `ImpactProbe` into the process under test. Check once that the process is instrumented, then bracket each unit with `ImpactProbe.reset()` and `ImpactProbe.executed()`:
+Link `ImpactProbe` into the process under test. Create a probe as each unit starts, and ask it what ran when the unit ends:
 
 ```swift
-try ImpactProbe.check()
-
-ImpactProbe.reset()
+let probe = try ImpactProbe()
 runTheUnit()
-let functions = ImpactProbe.executed()
+let functions = probe.executed()
 ```
 
-Counters are per process, so run one unit at a time. Send `functions` to the harness however suits it, such as a JSON file per unit.
+Units can run in parallel, in one process or many. A unit's functions include whatever else ran in its process meanwhile, so units that overlap select each other's changes too; separate processes keep them apart. Before calling `executed()`, wait for any work the unit started. Send `functions` to the harness however suits it, such as a JSON file per unit.
 
-If `ImpactProbe.check()` throws, the process can't be measured. Run every unit, and show the error's description to say why.
+If creating the probe throws, the process can't be measured: run the unit regardless, and show the error's description to say why. `ImpactProbe.check()` answers the same question up front.
 
 ### Resolve recordings to footprints
 

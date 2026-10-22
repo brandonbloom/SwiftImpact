@@ -9,16 +9,19 @@ Each cell gives a case's outcome in an environment and mode, then its units chan
 - ❗ a unit listed as a known gap no longer escapes;
 - 🔀 the incremental build after the edit differs from a clean one.
 
-| Case | Edit | macos-swift-6.4.0.34.1-debug, shared | macos-swift-6.4.0.34.1-debug, isolated |
-|---|---|---|---|
-| `body-literal` | A literal in a function body changes. | ✅ 1/1/2 | ✅ 1/1/2 |
-| `comment-shift` | A comment above a function shifts its lines. | ✅ 0/0/2 | ✅ 0/0/2 |
-| `conformance-added` | A conformance in another file changes what a runtime lookup finds. | ✅ 1/1/2 | ✅ 1/1/2 |
-| `cross-module-body` | A literal in a public function of another module changes. | ✅ 1/1/2 | ✅ 1/1/2 |
-| `global-initializer` | The initializer of a global, run once per process, changes. | ✅ 2/2/3 | ✅ 2/2/3 |
-| `line-literal` | A comment shifts a function that returns its own `#line`. | ✅ 1/1/2 | ✅ 1/1/2 |
-| `new-file` | A new file declares a type nothing uses. | ✅ 0/0/2 | ✅ 0/0/2 |
-| `observable-default` | An `@Observable` property's default value changes; another file reads it. | ✅ 1/1/2 | ✅ 1/1/2 |
-| `overload-elsewhere` | A more specific overload in another file changes what a call resolves to. | ✅ 1/2/3 | ✅ 1/2/3 |
-| `property-default` | A stored property's default value changes; another file uses the synthesized initializer. | ✅ 1/1/2 | ✅ 1/1/2 |
-| `witness-elsewhere` | A member added in another file becomes a type's witness, replacing a default implementation. | ⚠️ 1/0/2, known gap | ⚠️ 1/0/2, known gap |
+| Case | Edit | macos-swift-6.4.0.34.1-debug, shared | macos-swift-6.4.0.34.1-debug, isolated | macos-swift-6.4.0.34.1-debug, parallel |
+|---|---|---|---|---|
+| `body-literal` | A literal in a function body changes. | ✅ 1/1/2 | ✅ 1/1/2 | ✅ 1/1/2 |
+| `comment-shift` | A comment above a function shifts its lines. | ✅ 0/0/2 | ✅ 0/0/2 | ✅ 0/0/2 |
+| `conformance-added` | A conformance in another file changes what a runtime lookup finds. | ✅ 1/1/2 | ✅ 1/1/2 | ✅ 1/1/2 |
+| `cross-module-body` | A literal in a public function of another module changes. | ✅ 1/1/2 | ✅ 1/1/2 | ✅ 1/1/2 |
+| `detached-work` | A unit leaves work running that finishes before the next unit, which reads its result. | ⚠️ 1/0/3, known gap | ✅ 0/0/3 | ✅ 0/0/3 |
+| `global-initializer` | The initializer of a global, run once per process, changes. | ✅ 2/2/3 | ✅ 2/2/3 | ✅ 2/2/3 |
+| `line-literal` | A comment shifts a function that returns its own `#line`. | ✅ 1/1/2 | ✅ 1/1/2 | ✅ 1/1/2 |
+| `new-file` | A new file declares a type nothing uses. | ✅ 0/0/2 | ✅ 0/0/2 | ✅ 0/0/2 |
+| `observable-default` | An `@Observable` property's default value changes; another file reads it. | ✅ 1/1/2 | ✅ 1/1/2 | ✅ 1/1/2 |
+| `other-thread` | A unit runs the edited code on another thread and waits for it. | ✅ 1/1/2 | ✅ 1/1/2 | ✅ 1/1/2 |
+| `overload-elsewhere` | A more specific overload in another file changes what a call resolves to. | ✅ 1/2/3 | ✅ 1/2/3 | ✅ 1/2/3 |
+| `parallel-overlap` | Units run at once in one process; one runs the edited code before another begins. | ✅ 1/1/3 | ✅ 1/1/3 | ✅ 1/1/3 |
+| `property-default` | A stored property's default value changes; another file uses the synthesized initializer. | ✅ 1/1/2 | ✅ 1/1/2 | ✅ 1/1/2 |
+| `witness-elsewhere` | A member added in another file becomes a type's witness, replacing a default implementation. | ⚠️ 1/0/2, known gap | ⚠️ 1/0/2, known gap | ⚠️ 1/0/2, known gap |

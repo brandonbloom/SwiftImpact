@@ -10,7 +10,7 @@ Selection answers one question per unit: could anything the unit depended on hav
 
 Code built with `-profile-generate` carries LLVM's instrumentation: a counter per region of each function, in the `__llvm_prf_cnts` section, and a 64-byte record per function in `__llvm_prf_data`, holding a hash of the function's name and where its counters are.
 
-`ImpactProbe` finds those sections in each loaded image with `getsectiondata`. Resetting zeroes the counters; afterwards, every function whose counters moved ran. There is no profile file and no LLVM runtime API involved, so recording a unit costs a pass over memory. Before trusting the records, the probe checks that their counters exactly tile the counters section.
+`ImpactProbe` finds those sections in each loaded image with `getsectiondata`. Creating a probe as a unit begins copies the counters; at its end, every function whose counters moved since ran. The probe never writes the counters, so units can be measured concurrently, each seeing the others' work as its own. There is no profile file and no LLVM runtime API involved, so recording a unit costs a copy and a pass over memory. Before trusting the records, the probe checks that their counters exactly tile the counters section.
 
 ### Mapping functions to source files
 

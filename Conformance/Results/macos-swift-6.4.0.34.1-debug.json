@@ -25,6 +25,26 @@
             "unit" : "adds"
           }
         ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "footprint" : 4,
+            "reasons" : [
+              "Greeting.o"
+            ],
+            "selected" : true,
+            "unit" : "greets"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
         "shared" : [
           {
             "changed" : true,
@@ -53,6 +73,26 @@
       ],
       "units" : {
         "isolated" : [
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "greets"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
           {
             "changed" : false,
             "footprint" : 4,
@@ -119,6 +159,26 @@
             "unit" : "adds"
           }
         ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "footprint" : 4,
+            "reasons" : [
+              "_$s5Units3TagVs23CustomStringConvertibleAAMc"
+            ],
+            "selected" : true,
+            "unit" : "describes-tag"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
         "shared" : [
           {
             "changed" : true,
@@ -166,6 +226,26 @@
             "unit" : "adds"
           }
         ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Greeting.o"
+            ],
+            "selected" : true,
+            "unit" : "greets"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
         "shared" : [
           {
             "changed" : true,
@@ -188,12 +268,135 @@
         ]
       }
     },
+    "detached-work" : {
+      "divergent" : [
+
+      ],
+      "units" : {
+        "isolated" : [
+          {
+            "changed" : false,
+            "footprint" : 5,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "warms"
+          },
+          {
+            "changed" : false,
+            "footprint" : 5,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "reads"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
+          {
+            "changed" : false,
+            "footprint" : 5,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "warms"
+          },
+          {
+            "changed" : false,
+            "footprint" : 5,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "reads"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "shared" : [
+          {
+            "changed" : false,
+            "footprint" : 5,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "warms"
+          },
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "reads"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ]
+      }
+    },
     "global-initializer" : {
       "divergent" : [
 
       ],
       "units" : {
         "isolated" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Banner.o"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Banner.o"
+            ],
+            "selected" : true,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
           {
             "changed" : true,
             "footprint" : 5,
@@ -278,6 +481,26 @@
             "unit" : "adds"
           }
         ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "footprint" : 4,
+            "reasons" : [
+              "Location.o"
+            ],
+            "selected" : true,
+            "unit" : "locates"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
         "shared" : [
           {
             "changed" : true,
@@ -306,6 +529,26 @@
       ],
       "units" : {
         "isolated" : [
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "greets"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
           {
             "changed" : false,
             "footprint" : 4,
@@ -372,6 +615,26 @@
             "unit" : "adds"
           }
         ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Model.o"
+            ],
+            "selected" : true,
+            "unit" : "reads-count"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
         "shared" : [
           {
             "changed" : true,
@@ -381,6 +644,73 @@
             ],
             "selected" : true,
             "unit" : "reads-count"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ]
+      }
+    },
+    "other-thread" : {
+      "divergent" : [
+
+      ],
+      "units" : {
+        "isolated" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Compute.o"
+            ],
+            "selected" : true,
+            "unit" : "computes"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Compute.o"
+            ],
+            "selected" : true,
+            "unit" : "computes"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "shared" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Compute.o"
+            ],
+            "selected" : true,
+            "unit" : "computes"
           },
           {
             "changed" : false,
@@ -428,6 +758,35 @@
             "unit" : "adds"
           }
         ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Callers.o"
+            ],
+            "selected" : true,
+            "unit" : "describes-int"
+          },
+          {
+            "changed" : false,
+            "footprint" : 5,
+            "reasons" : [
+              "Callers.o"
+            ],
+            "selected" : true,
+            "unit" : "describes-string"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
         "shared" : [
           {
             "changed" : true,
@@ -459,12 +818,126 @@
         ]
       }
     },
+    "parallel-overlap" : {
+      "divergent" : [
+
+      ],
+      "units" : {
+        "isolated" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Value.o"
+            ],
+            "selected" : true,
+            "unit" : "early"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "late"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "footprint" : 8,
+            "reasons" : [
+              "Value.o"
+            ],
+            "selected" : true,
+            "unit" : "early"
+          },
+          {
+            "changed" : false,
+            "footprint" : 6,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "late"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "shared" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Value.o"
+            ],
+            "selected" : true,
+            "unit" : "early"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "late"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ]
+      }
+    },
     "property-default" : {
       "divergent" : [
 
       ],
       "units" : {
         "isolated" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+              "Settings.o"
+            ],
+            "selected" : true,
+            "unit" : "reads-size"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
           {
             "changed" : true,
             "footprint" : 5,
@@ -512,6 +985,26 @@
       ],
       "units" : {
         "isolated" : [
+          {
+            "changed" : true,
+            "footprint" : 5,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "shows-tag"
+          },
+          {
+            "changed" : false,
+            "footprint" : 4,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
           {
             "changed" : true,
             "footprint" : 5,

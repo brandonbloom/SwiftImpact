@@ -27,8 +27,10 @@ Global variables and conformances found at runtime are covered by rules of their
 
 ### The process under test
 
-- **One unit at a time.** Counters are per process. Work that runs concurrently with a unit, on other threads, is attributed to it, which over-selects but stays safe. A runner that runs units in parallel within one process must serialize them while recording.
-- **The profile format is LLVM's**, version 10 of its per-function records (LLVM 19 and later). `ImpactProbe.check()` throws if the records don't have the layout it expects.
+- **Parallel units over-select.** Counters are per process, so everything that runs in a process while a unit is measured, including other units, is attributed to it. That's safe, but the more units overlap in one process, the more each selects. Running units in parallel processes keeps them precise.
+- **Work that outlives a unit.** Code that work a unit started runs after its probe's `executed()` isn't attributed to the unit. If it finishes before the next unit begins, no footprint records it, and a later unit that reads its results can escape. Wait for a unit's work before ending it.
+- **Counters aren't atomic.** LLVM's instrumentation increments counters without synchronization. If a thread is preempted in the middle of an increment for the whole of a unit, its late write can restore the count the unit started with, hiding a function the unit ran. The window is narrow but real for units measured in parallel.
+- **The profile format is LLVM's**, version 10 of its per-function records (LLVM 19 and later). Creating a probe throws if the records don't have the layout it expects.
 
 ### The build
 

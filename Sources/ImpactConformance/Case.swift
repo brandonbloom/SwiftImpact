@@ -18,6 +18,9 @@ public struct Case: Sendable {
         /// The modules each module depends on. `Units` depends on every other module by default.
         public var dependencies: [String: [String]]?
         public var knownEscapes: [KnownEscape]?
+        /// Milliseconds to wait between units in the shared mode, so work a unit leaves running
+        /// finishes before the next one starts.
+        public var pauseBetweenUnits: Int?
     }
 
     /// A unit expected to escape selection: a known gap, with why.

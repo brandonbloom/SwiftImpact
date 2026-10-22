@@ -35,7 +35,11 @@ struct CommandError: Error, CustomStringConvertible {
     let arguments: [String]
     let status: Int32
     let output: String
+    /// The command and its exit status, then the output's error lines, or else its last lines.
     var description: String {
-        "\(arguments.joined(separator: " ")) exited with \(status):\n\(output)"
+        let lines = output.split(separator: "\n")
+        let errors = lines.filter { $0.contains("error:") }
+        let shown = (errors.isEmpty ? lines.suffix(20) : errors.prefix(20)).joined(separator: "\n")
+        return "\(arguments.joined(separator: " ")) exited with \(status):\n\(shown)"
     }
 }

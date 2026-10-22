@@ -57,13 +57,11 @@ struct Workspace {
         let sources: [String]
     }
 
-    /// Runs every unit in one process, or only `unit`, with the harness at `harness`.
-    func run(_ harness: URL, unit: String? = nil) throws -> [Record] {
+    /// Runs the harness at `harness` with `arguments`, which choose the units and how they run.
+    func run(_ harness: URL, arguments: [String] = []) throws -> [Record] {
         let out = directory.appending(path: "records.json")
-        var arguments = [harness.path, out.path]
-        if let unit { arguments.append(unit) }
         try command(
-            arguments, in: directory,
+            [harness.path, out.path] + arguments, in: directory,
             environment: ["LLVM_PROFILE_FILE": directory.appending(path: "default.profraw").path])
         return try JSONDecoder().decode([Record].self, from: Data(contentsOf: out))
     }

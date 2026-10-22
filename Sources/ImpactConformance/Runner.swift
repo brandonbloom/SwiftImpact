@@ -8,6 +8,10 @@ public enum Mode: String, Codable, CodingKeyRepresentable, CaseIterable, Sendabl
     case shared
     /// Each unit in a process of its own.
     case isolated
+    /// All units in one process at once, each on a thread of its own and starting 20 ms after the
+    /// one before, as a parallel test runner would. Each unit's footprint includes what the others
+    /// ran while it did.
+    case parallel
 }
 
 /// What a case did to each of its units in one mode.
@@ -66,24 +70,39 @@ public struct Runner: Sendable {
             directory: workDirectory.appending(path: testCase.name), support: try support())
         try? FileManager.default.removeItem(at: workspace.directory)
 
+        // Runs every unit in `mode`, in the order the shared mode runs them.
+        var names: [String] = []
+        func run(_ harness: URL, in mode: Mode) throws -> [Workspace.Record] {
+            switch mode {
+            case .shared:
+                let pause = testCase.manifest.pauseBetweenUnits.map { ["--pause", "\($0)"] }
+                let records = try workspace.run(harness, arguments: pause ?? [])
+                names = records.map(\.unit)
+                return records
+            case .isolated:
+                return try names.flatMap { try workspace.run(harness, arguments: [$0]) }
+            case .parallel:
+                let records = try workspace.run(harness, arguments: ["--parallel"])
+                return records.sorted {
+                    names.firstIndex(of: $0.unit)! < names.firstIndex(of: $1.unit)!
+                }
+            }
+        }
+
         try workspace.write(testCase, for: .before)
         var harness = try workspace.build()
         let before = try workspace.index()
         var recorded: [Mode: [Workspace.Record]] = [:]
-        recorded[.shared] = try workspace.run(harness)
-        recorded[.isolated] = try recorded[.shared]!.flatMap {
-            try workspace.run(harness, unit: $0.unit)
-        }
+        for mode in Mode.allCases { recorded[mode] = try run(harness, in: mode) }
 
         try workspace.write(testCase, for: .after)
         harness = try workspace.build()
         let after = try workspace.index()
         var outputs: [Mode: [String: String]] = [:]
-        let shared = try workspace.run(harness)
-        outputs[.shared] = Dictionary(uniqueKeysWithValues: shared.map { ($0.unit, $0.output) })
-        outputs[.isolated] = Dictionary(
-            uniqueKeysWithValues: try shared.flatMap { try workspace.run(harness, unit: $0.unit) }
-                .map { ($0.unit, $0.output) })
+        for mode in Mode.allCases {
+            outputs[mode] = Dictionary(
+                uniqueKeysWithValues: try run(harness, in: mode).map { ($0.unit, $0.output) })
+        }
 
         var result = CaseResult(units: [:], divergent: [])
         for mode in Mode.allCases {

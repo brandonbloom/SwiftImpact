@@ -6,19 +6,26 @@ import MachO
 ///
 /// Code built with `-profile-generate` keeps a counter per region of each function, in the
 /// `__llvm_prf_cnts` section, and a record per function in `__llvm_prf_data`. The probe reads them
-/// in place: ``reset()`` zeroes the counters, and ``executed()`` returns the name hash of every
+/// in place: creating one copies the counters, and ``executed()`` returns the name hash of every
 /// function whose counters moved since. The harness maps those hashes to source files with
 /// `ImpactAnalysis`.
 ///
-/// Counters are process-wide, so a process can measure one unit at a time. Work that runs
-/// concurrently with the unit is attributed to it too, which over-approximates its footprint.
-public enum ImpactProbe {
+/// Counters are process-wide and the probe never changes them, so units can be measured
+/// concurrently. Code that runs anywhere in the process while a unit is measured, such as another
+/// unit's, is attributed to it too, which over-approximates its footprint but loses nothing.
+///
+/// ```swift
+/// let probe = try ImpactProbe()
+/// runTheUnit()
+/// let functions = probe.executed()
+/// ```
+public struct ImpactProbe: Sendable {
     /// The size of a version 10 `__llvm_profile_data` record (LLVM 19 and later).
     static let recordSize = 64
 
     struct Image: @unchecked Sendable {
         let data: UnsafeRawBufferPointer
-        let counters: UnsafeMutableRawBufferPointer
+        let counters: UnsafeRawBufferPointer
     }
 
     /// The instrumented images loaded at first use, or why the probe can't read them.
@@ -37,7 +44,7 @@ public enum ImpactProbe {
             else { continue }
             let image = Image(
                 data: UnsafeRawBufferPointer(start: data, count: dataSize),
-                counters: UnsafeMutableRawBufferPointer(start: counters, count: countersSize))
+                counters: UnsafeRawBufferPointer(start: counters, count: countersSize))
             if let problem = validate(image) { return .failure(problem) }
             images.append(image)
         }
@@ -56,22 +63,28 @@ public enum ImpactProbe {
         _ = try images.get()
     }
 
-    /// Zeroes every counter, starting a new unit.
-    public static func reset() {
-        guard case .success(let images) = images else { return }
-        for image in images {
-            image.counters.initializeMemory(as: UInt8.self, repeating: 0)
-        }
+    /// Each image's counters when the probe was created.
+    let start: [[UInt64]]
+
+    /// Starts measuring by copying the counters. Throws if this process has no instrumented code
+    /// the probe can read, in which case the unit can't be measured.
+    public init() throws {
+        start = try Self.images.get().map { Array($0.counters.bindMemory(to: UInt64.self)) }
     }
 
-    /// The name hashes (`NameRef`) of the functions that ran since ``reset()``.
-    public static func executed() -> [UInt64] {
-        guard case .success(let images) = images else { return [] }
+    /// The name hashes (`NameRef`) of the functions that ran anywhere in the process since the
+    /// probe was created.
+    public func executed() -> [UInt64] {
+        guard case .success(let images) = Self.images else { return [] }
         var executed: [UInt64] = []
-        for image in images {
-            for record in stride(from: 0, to: image.data.count, by: recordSize) {
-                let (nameRef, counters) = fields(of: record, in: image)
-                if counters.contains(where: { $0 != 0 }) { executed.append(nameRef) }
+        for (image, before) in zip(images, start) {
+            let base = image.counters.baseAddress!
+            for record in stride(from: 0, to: image.data.count, by: Self.recordSize) {
+                let (nameRef, counters) = Self.fields(of: record, in: image)
+                let first = (UnsafeRawPointer(counters.baseAddress!) - base) / 8
+                if counters.indices.contains(where: { counters[$0] != before[first + $0] }) {
+                    executed.append(nameRef)
+                }
             }
         }
         return executed

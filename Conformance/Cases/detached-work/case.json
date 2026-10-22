@@ -1,0 +1,13 @@
+{
+    "summary": "A unit leaves work running that finishes before the next unit, which reads its result.",
+    "pauseBetweenUnits": 300,
+    "knownEscapes": [
+        {
+            "unit": "reads",
+            "modes": [
+                "shared"
+            ],
+            "reason": "The work 'warms' left running finished between units, so no footprint recorded the code that produced the value 'reads' returns."
+        }
+    ]
+}
