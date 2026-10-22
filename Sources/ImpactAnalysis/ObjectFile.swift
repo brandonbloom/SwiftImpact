@@ -99,6 +99,13 @@ struct ObjectFile {
         defined.filter { $0.hasPrefix("_$s") && $0.hasSuffix("Mc") }
     }
 
+    /// The manglings of the types the object defines, from their nominal type descriptors (`Mn`).
+    var definedTypes: Set<String> {
+        Set(
+            defined.filter { $0.hasPrefix("_$s") && $0.hasSuffix("Mn") }
+                .map { String($0.dropLast(2)) })
+    }
+
     /// The manglings of the types the object defines or refers to, from their metadata (`N`),
     /// metadata accessors (`Ma`), and nominal type descriptors (`Mn`).
     var types: Set<String> {

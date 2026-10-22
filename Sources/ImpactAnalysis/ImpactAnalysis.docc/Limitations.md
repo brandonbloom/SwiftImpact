@@ -28,7 +28,7 @@ Global variables and conformances found at runtime are covered by rules of their
 ### The process under test
 
 - **Parallel tests over-select.** Counters are per process, so everything that runs in a process while a test is recorded, including other tests, is attributed to it. That's safe, but the more tests overlap in one process, the more each selects. Running tests in parallel processes keeps them precise.
-- **Work shared across tests.** Work done once per process and reused, such as a cached context, is recorded only by the test that happened to do it. Other tests that use it are impacted by changes to it only if they name its recording in `dependsOn`; see <doc:Adopting>.
+- **Work shared across tests.** Work done once per process and reused, such as a cached context, is recorded only by the test that happened to do it. Other tests that use it are impacted by changes to it only if they add its recording as a dependency; see <doc:Adopting>.
 - **Work that outlives a test.** Code that runs after a test's probe stops, in work the test started, isn't attributed to the test. If it finishes before the next test begins, no recording includes it, and a later test that reads its results can be skipped wrongly. Wait for a test's work before stopping its probe.
 - **Counters aren't atomic.** LLVM's instrumentation increments counters without synchronization. If a thread is preempted in the middle of an increment for the whole of a test, its late write can restore the count the test started with, hiding a function the test ran. The window is narrow but real for tests recorded in parallel.
 - **The profile format is LLVM's**, version 10 of its per-function records (LLVM 19 and later). If the records don't have the layout it expects, the probe records nothing and says why on standard error, and the tests run next time.
@@ -47,4 +47,4 @@ Selection is by object, so it selects more than changes:
 - every test that ran any of a changed file's code;
 - every test using a file that moved lines, when code embeds its location through `#line`, `#fileID`, or macro expansions;
 - every test using a file the compiler rebuilt, even where nothing that runs changed;
-- every test using a type whose name begins with that of a type whose conformances changed, since types are matched by prefix.
+- every test using a type whose conformances changed, whether or not it looks the conformance up.

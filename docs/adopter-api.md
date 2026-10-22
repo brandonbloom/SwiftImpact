@@ -12,18 +12,17 @@ If it does, the harness can skip the test; if not, it runs it.
 // MARK: ImpactProbe — linked into the process that runs the tests
 
 /// A test being recorded.
-public struct ImpactProbe: Sendable {
+public final class ImpactProbe: Sendable {
     /// Starts recording `test`, declared in the file with `#fileID` `fileID`, or `nil` if that
     /// isn't known.
     ///
-    /// `dependsOn` names other recordings the test depends on, such as of shared work; the test
-    /// is impacted whenever one of them is, or has no recording.
-    ///
     /// Records nothing unless the process was launched with `ImpactAnalysis.environment(for:)`
     /// and built with `ImpactAnalysis.buildArguments`.
-    public static func start(
-        test: String, declaredIn fileID: String?, dependsOn: [String] = []
-    ) -> ImpactProbe
+    public static func start(test: String, declaredIn fileID: String?) -> ImpactProbe
+
+    /// Records that the test depends on another recording, such as of shared work: the test is
+    /// impacted whenever that recording is, or doesn't exist. From any thread, before `stop()`.
+    public func addDependency(_ recording: String)
 
     /// Stops recording and saves what the test ran. Wait for any work the test started first.
     public func stop()
@@ -68,7 +67,7 @@ public struct ImpactAnalysis: Sendable {
 - **Harnesses can share a build directory.** Each file is written atomically under a name of its own, and a snapshot or unreadable file is removed only once it's an hour old, so a concurrent harness's newer files survive until they're needed or stale.
 - **State lives in the build directory**, under `impact/`, as a cache of that build. Clearing the build clears it, and every test runs.
 - **The cycle is build, analyze, run.** Each analysis records the build its run is about to use, which the next analysis needs to make sense of that run's recordings.
-- **Shared work is a recording of its own.** Work done once per process and reused by several tests, such as a cached context, runs inside at most one test's recording. Recording it under its own identifier, and naming that identifier in each dependent test's `dependsOn`, makes the dependents impacted whenever it is.
+- **Shared work is a recording of its own.** Work done once per process and reused by several tests, such as a cached context, runs inside at most one test's recording. Recording it under its own identifier, and adding that identifier as a dependency of each test that uses it, makes those tests impacted whenever it is. A harness often learns what a test uses only while running it, so dependencies can be added until the probe stops.
 - **Everything uncertain means "run it":**
   - a test with no recording, or depending on a recording that doesn't exist;
   - a recording made in a build no analysis saw, or that doesn't fully resolve;
@@ -91,6 +90,7 @@ The documentation's How It Works and Limitations articles cover the selection ru
 ## Alternatives considered
 
 - **An explicit `attach()` before recording.** It would need calling exactly once per process, with no benefit: attaching is idempotent, so it happens on first use.
+- **Dependencies as an argument to `start` or `stop`.** A harness may learn what a test uses at any point while running it, often deep in code that doesn't own the test's lifecycle. A method callable on the probe from anywhere fits that, which is also why the probe is a class: every holder adds to the same recording.
 - **An initializer to start a probe.** Starting copies the counters at that moment, an effect a static `start` makes visible at the call site.
 - **Handing recordings to the harness to carry.** The process under test is usually not the harness, so the adopter would have to serialize and transport an opaque value. The build directory is already shared between the two.
 - **A harness-declared environment.** Changes to the toolchain and SDK are visible in the build. Settings only the harness knows belong in test identifiers, where they also keep results for different settings apart.

@@ -19,9 +19,12 @@ public final class Shared<Value: Sendable>: @unchecked Sendable {
     /// The identifier computing it is recorded under.
     public var recording: String { "shared/\(name)" }
 
-    /// The value, computed and recorded the first time it's asked for in a process.
+    /// The value, computed and recorded the first time it's asked for in a process. Adds itself
+    /// as a dependency of the unit running on this thread, if that unit discovers its
+    /// dependencies.
     public var value: Value {
-        lock.withLock {
+        Discovery.current?.addDependency(recording)
+        return lock.withLock {
             if let cached { return cached }
             let probe = ImpactProbe.start(test: recording, declaredIn: fileID)
             let value = make()

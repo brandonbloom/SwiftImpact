@@ -19,3 +19,11 @@ import Testing
 @Test func formatsUUIDs() {
     #expect(format(uuid: Array(0..<16)) == "00010203-0405-0607-0809-0A0B0C0D0E0F")
 }
+
+@Test func dependenciesAddedAfterStoppingAreIgnored() {
+    let probe = ImpactProbe.start(test: "t", declaredIn: nil)
+    probe.addDependency("before")
+    probe.stop()
+    probe.addDependency("after")
+    #expect(probe.state.withLock { $0.dependencies } == ["before"])
+}

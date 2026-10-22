@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 
 /// A test being recorded: what it runs, from start to stop, saved for `ImpactAnalysis`.
 ///
@@ -16,47 +17,61 @@ import Foundation
 ///
 /// Work done once and shared by several tests, such as a context computed on first use and
 /// cached, runs inside at most one test's recording. Record it under an identifier of its own,
-/// and name that identifier in `dependsOn` when starting each test that uses it:
+/// and add that identifier as a dependency of each test that uses it, whenever the test is found
+/// to use it:
 ///
 /// ```swift
 /// let shared = ImpactProbe.start(test: "shared/SampleLibrary", declaredIn: #fileID)
 /// let library = makeSampleLibrary()
 /// shared.stop()
 ///
-/// let probe = ImpactProbe.start(
-///     test: "CardView/iPhone", declaredIn: "MyApp/CardView.swift",
-///     dependsOn: ["shared/SampleLibrary"])
+/// // While recording a test that uses it:
+/// probe.addDependency("shared/SampleLibrary")
 /// ```
-public struct ImpactProbe: Sendable {
+public final class ImpactProbe: Sendable {
     let test: String
     let fileID: String?
-    let dependencies: [String]
     /// Each instrumented image's counters when the probe started; `nil` when not recording.
     let start: [[UInt64]]?
+    /// The recordings the test depends on, and whether the probe has stopped.
+    let state = Mutex<(dependencies: [String], stopped: Bool)>(([], false))
+
+    init(test: String, fileID: String?, start: [[UInt64]]?) {
+        self.test = test
+        self.fileID = fileID
+        self.start = start
+    }
 
     /// Starts recording `test`, an identifier the harness chooses and keeps stable from run to
     /// run, declared in the file with `#fileID` `fileID`.
     ///
     /// Pass `nil` for `fileID` if the declaring file isn't known. The test is still recorded, but
     /// code that macros generate in that file isn't, since it has no counters.
-    ///
-    /// `dependsOn` names other recordings the test depends on, such as of shared work. The test is
-    /// impacted whenever one of them is, or has no recording.
-    public static func start(
-        test: String, declaredIn fileID: String?, dependsOn dependencies: [String] = []
-    ) -> ImpactProbe {
-        ImpactProbe(
-            test: test, fileID: fileID, dependencies: dependencies,
-            start: Session.current?.counters())
+    public static func start(test: String, declaredIn fileID: String?) -> ImpactProbe {
+        ImpactProbe(test: test, fileID: fileID, start: Session.current?.counters())
+    }
+
+    /// Records that the test depends on the recording `recording`, such as of shared work: the
+    /// test is impacted whenever that recording is, or doesn't exist. Call it from any thread
+    /// before ``stop()``; after, it does nothing.
+    public func addDependency(_ recording: String) {
+        state.withLock { state in
+            if !state.stopped { state.dependencies.append(recording) }
+        }
     }
 
     /// Stops recording and saves what the test ran. Wait for any work the test started first:
-    /// what runs after this isn't recorded.
+    /// what runs after this isn't recorded. Stopping again does nothing.
     public func stop() {
-        guard let start, let session = Session.current else { return }
+        let dependencies: [String]? = state.withLock { state in
+            if state.stopped { return nil }
+            state.stopped = true
+            return state.dependencies
+        }
+        guard let dependencies, let start, let session = Session.current else { return }
         session.save(
             RecordingFile(
-                test: test, declaredIn: fileID, dependsOn: dependencies,
+                test: test, declaredIn: fileID, dependsOn: Array(Set(dependencies)).sorted(),
                 images: session.images.map(\.uuid), functions: session.executed(since: start)))
     }
 }

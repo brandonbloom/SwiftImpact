@@ -33,7 +33,7 @@ Comparing objects rather than sources lets the compiler do the hard part. When a
 Some dependencies run no instrumented code in the test that depends on them, so the footprint gets help:
 - **Declaring files.** Code that macros generate has no counters. The harness names the file declaring each test, and it joins the test's footprint.
 - **Globals.** A global or static variable is initialized once per process, so only the first test to read it runs its initializer. Its readers reference its addressor (`…vau`, `…vauZ`), which is visible in their objects' symbol tables. A footprint includes the objects defining every variable its objects read, transitively.
-- **Conformances.** A conformance found at runtime, such as by `as? P`, changes behaviour without changing the code that asks. A snapshot keeps every conformance descriptor (`…Mc`) in the build, and a footprint the types its objects define or refer to. A conformance that comes or goes for one of those types means the test needs to run.
+- **Conformances.** A conformance found at runtime, such as by `as? P`, changes behaviour without changing the code that asks. A snapshot keeps every conformance descriptor (`…Mc`) in the build, and a footprint the types its objects define or refer to. A conformance that comes or goes for one of those types means the test needs to run. Each conformance is matched to its type exactly, so a nested type's conformance isn't its parent's. Only types that exist in both builds count, or in neither, as a type from another library does: a new type had no users before, and one that's gone or renamed, as a line shift renames a `#Preview`'s generated type, changed its users' code anyway.
 
 ### Why by file
 

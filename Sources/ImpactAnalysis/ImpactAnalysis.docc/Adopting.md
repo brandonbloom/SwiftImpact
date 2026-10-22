@@ -46,7 +46,7 @@ Recordings are saved in the build directory, where your harness finds them. Prob
 
 ### Record work shared across tests
 
-Some work is done once per process and reused by several tests, such as a context computed the first time a test needs it and then cached. It runs inside at most one test's recording, so the others don't record depending on it. Record it under an identifier of its own, and name that identifier when starting each test that uses it:
+Some work is done once per process and reused by several tests, such as a context computed the first time a test needs it and then cached. It runs inside at most one test's recording, so the others don't record depending on it. Record it under an identifier of its own, and add that identifier as a dependency of each test that uses it, whenever you learn that it does, even partway through the test:
 
 ```swift
 // Where the shared work is done, once per process:
@@ -54,10 +54,11 @@ let shared = ImpactProbe.start(test: "shared/SampleLibrary", declaredIn: #fileID
 let library = makeSampleLibrary()
 shared.stop()
 
-// For each test that uses it:
-let probe = ImpactProbe.start(
-    test: test.id, declaredIn: test.fileID, dependsOn: ["shared/SampleLibrary"])
+// While recording a test that uses it:
+probe.addDependency("shared/SampleLibrary")
 ```
+
+A probe can be handed to whatever code learns about the dependency, on any thread, until it stops.
 
 A test is impacted whenever a recording it depends on is, or when that recording doesn't exist yet.
 

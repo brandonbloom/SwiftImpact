@@ -19,8 +19,4 @@ struct Footprint: Codable, Sendable, Equatable {
         objects.filter { index.fingerprints[$0.key] != $0.value }.map(\.key).sorted()
     }
 
-    /// The conformances in `changed` that are for one of this footprint's types.
-    func uses(_ changed: Set<String>) -> [String] {
-        changed.filter { conformance in types.contains { conformance.hasPrefix($0) } }.sorted()
-    }
 }

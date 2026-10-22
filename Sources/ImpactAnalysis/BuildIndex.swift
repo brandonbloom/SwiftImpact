@@ -17,12 +17,15 @@ package struct BuildIndex: Codable, Sendable {
     var conformances: [String: [String]]
     /// The manglings of the types each object defines or refers to.
     var types: [String: [String]]
+    /// The manglings of the types each object defines.
+    var definedTypes: [String: [String]]
 
     /// Creates an index from its parts, as a test might.
     init(
         fingerprints: [String: String] = [:], owners: [UInt64: [String]] = [:],
         sources: [String: String] = [:], globalReads: [String: [String]] = [:],
-        conformances: [String: [String]] = [:], types: [String: [String]] = [:]
+        conformances: [String: [String]] = [:], types: [String: [String]] = [:],
+        definedTypes: [String: [String]] = [:]
     ) {
         self.fingerprints = fingerprints
         self.owners = owners
@@ -30,6 +33,7 @@ package struct BuildIndex: Codable, Sendable {
         self.globalReads = globalReads
         self.conformances = conformances
         self.types = types
+        self.definedTypes = definedTypes
     }
 
     /// The `#fileID` of the source file compiled to the object at `path`, or the object's name if
@@ -40,6 +44,10 @@ package struct BuildIndex: Codable, Sendable {
 
     /// Every conformance in the build.
     var allConformances: Set<String> { Set(conformances.values.joined()) }
+
+    /// Every type the build defines, and every type it defines or refers to.
+    var allDefinedTypes: Set<String> { Set(definedTypes.values.joined()) }
+    var allTypes: Set<String> { Set(types.values.joined()) }
 
     /// Indexes the SwiftPM build in `buildDirectory`, such as `.build`: every configuration, or
     /// only `configuration`, such as `Debug`.
@@ -75,6 +83,7 @@ package struct BuildIndex: Codable, Sendable {
             reads[path] = object.undefined.filter(ObjectFile.isGlobalAddressor)
             conformances[path] = object.conformances
             types[path] = object.types.sorted()
+            definedTypes[path] = object.definedTypes.sorted()
             directories.insert(url.deletingLastPathComponent())
         }
         for (path, symbols) in reads {

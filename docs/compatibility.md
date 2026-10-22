@@ -25,5 +25,6 @@ Each cell gives a case's outcome in an environment and mode, then its units chan
 | `parallel-overlap` | Units run at once in one process; one runs the edited code before another begins. | ✅ 1/1/3 | ✅ 1/1/3 | ✅ 1/1/3 |
 | `property-default` | A stored property's default value changes; another file uses the synthesized initializer. | ✅ 1/1/2 | ✅ 1/1/2 | ✅ 1/1/2 |
 | `shared-work` | Units declare that they depend on work computed once per process and cached; the work's code changes. | ✅ 2/2/3 | ✅ 2/2/3 | ✅ 2/2/3 |
+| `shared-work-discovered` | Units learn while running that they use work computed once per process and cached, and add it as a dependency then; the work's code changes. | ✅ 2/2/3 | ✅ 2/2/3 | ✅ 2/2/3 |
 | `shared-work-undeclared` | Units use work computed once per process and cached, without declaring it; the work's code changes. | ⚠️ 2/1/3, known gap | ✅ 2/2/3 | ⚠️ 2/1/3, known gap |
 | `witness-elsewhere` | A member added in another file becomes a type's witness, replacing a default implementation. | ⚠️ 1/0/2, known gap | ⚠️ 1/0/2, known gap | ⚠️ 1/0/2, known gap |

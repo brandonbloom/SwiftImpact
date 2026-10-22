@@ -978,6 +978,95 @@
         ]
       }
     },
+    "shared-work-discovered" : {
+      "divergent" : [
+
+      ],
+      "units" : {
+        "isolated" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed",
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed",
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "parallel" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed",
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ],
+        "shared" : [
+          {
+            "changed" : true,
+            "reasons" : [
+              "Units\/Library.swift changed",
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "first"
+          },
+          {
+            "changed" : true,
+            "reasons" : [
+              "it depends on shared\/Library, which is impacted"
+            ],
+            "selected" : true,
+            "unit" : "second"
+          },
+          {
+            "changed" : false,
+            "reasons" : [
+
+            ],
+            "selected" : false,
+            "unit" : "adds"
+          }
+        ]
+      }
+    },
     "shared-work-undeclared" : {
       "divergent" : [
 

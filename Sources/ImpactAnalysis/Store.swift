@@ -123,7 +123,7 @@ struct Recording: Decodable {
 /// One configuration of a build as an analysis saw it: its instrumented images, and the index of
 /// its objects.
 struct Snapshot: Codable, Sendable {
-    static let version = 1
+    static let version = 2
 
     var version = Self.version
     /// The configuration's directory name under `out/Products`, such as `Debug`.

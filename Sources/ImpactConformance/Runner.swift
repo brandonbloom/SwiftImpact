@@ -56,6 +56,8 @@ public struct Runner: Sendable {
                 try read(supportDirectory.appending(path: "ImpactCase/Unit.swift")),
             "Sources/ImpactCase/Shared.swift":
                 try read(supportDirectory.appending(path: "ImpactCase/Shared.swift")),
+            "Sources/ImpactCase/Discovery.swift":
+                try read(supportDirectory.appending(path: "ImpactCase/Discovery.swift")),
             "Sources/Harness/main.swift":
                 try read(supportDirectory.appending(path: "Harness/main.swift")),
         ]

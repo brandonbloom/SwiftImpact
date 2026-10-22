@@ -29,7 +29,7 @@ public struct ImpactAnalysis: Sendable {
     }
 
     /// Each recorded test's reasons to run, empty if its last result holds.
-    let reasons: [String: [String]]
+    let reasons: [String: Reasons]
 
     /// The number of tests whose latest recording this analysis could use. Zero means it knows
     /// nothing: no run has been recorded in this build directory, or the process running the
@@ -48,22 +48,32 @@ public struct ImpactAnalysis: Sendable {
         }
         try store.save(current)
         let snapshots = store.snapshots()
-        var reasons: [String: [String]] = [:]
+        var reasons: [String: Reasons] = [:]
         var recordedTestCount = 0
         var needed = Set(current.map(\.key))
+        var conformanceChanges: [String: ConformanceChanges] = [:]
         let recordings = store.latestRecordings()
         for (test, recording) in recordings {
             let recorded = snapshots.first { Set($0.images).isSuperset(of: recording.images) }
             if let recorded { needed.insert(recorded.key) }
-            let assessment = assess(recording, recordedIn: recorded, current: current)
+            let assessment = assess(recording, recordedIn: recorded, current: current) {
+                before, after in
+                let key = "\(before.key) \(after.key)"
+                if let changes = conformanceChanges[key] { return changes }
+                let changes = ConformanceChanges(from: before.index, to: after.index)
+                conformanceChanges[key] = changes
+                return changes
+            }
             reasons[test] = assessment.reasons
             if assessment.usable { recordedTestCount += 1 }
         }
         store.removeSnapshots(except: needed)
         var withDependencies = reasons
         for test in reasons.keys {
-            withDependencies[test]! += dependencyReasons(
+            let (impacted, missing) = dependencies(
                 of: test, dependencies: { recordings[$0]?.dependsOn ?? [] }, reasons: reasons)
+            withDependencies[test]!.impactedDependencies = impacted
+            withDependencies[test]!.missingDependencies = missing
         }
         return ImpactAnalysis(reasons: withDependencies, recordedTestCount: recordedTestCount)
     }
@@ -71,7 +81,7 @@ public struct ImpactAnalysis: Sendable {
     /// Whether a change may have impacted `test`, so it needs to run: `true` unless its last
     /// result still holds, including for a test the analysis knows nothing about.
     public func isImpacted(_ test: String) -> Bool {
-        !reasonsToRun(test).isEmpty
+        !(reasons[test]?.isEmpty ?? false)
     }
 
     /// Why `test` is impacted or not, for a person to read, such as
@@ -79,58 +89,65 @@ public struct ImpactAnalysis: Sendable {
     ///
     /// For display only: the wording may change between versions, so don't parse it.
     public func explain(_ test: String) -> String {
-        let reasons = reasonsToRun(test)
-        return reasons.isEmpty ? "its last result still holds" : reasons.joined(separator: "; ")
+        reasons[test]?.summary ?? Self.unrecorded
     }
 
     /// Why `test` needs to run, one reason per cause; empty if its last result still holds.
     package func reasonsToRun(_ test: String) -> [String] {
-        reasons[test] ?? ["it has no recording"]
+        reasons[test]?.all ?? [Self.unrecorded]
     }
 
-    /// Why `test` needs to run because of the recordings it depends on, transitively: each one
-    /// that's impacted or has no recording. `reasons` holds each recorded test's own reasons.
-    static func dependencyReasons(
-        of test: String, dependencies: (String) -> [String], reasons: [String: [String]]
-    ) -> [String] {
-        var result: [String] = []
+    static let unrecorded = "it has no recording"
+
+    /// The recordings `test` depends on, transitively, that are impacted or don't exist.
+    /// `reasons` holds each recorded test's own reasons.
+    static func dependencies(
+        of test: String, dependencies: (String) -> [String], reasons: [String: Reasons]
+    ) -> (impacted: [String], missing: [String]) {
+        var impacted: [String] = []
+        var missing: [String] = []
         var seen: Set = [test]
         var pending = dependencies(test)
         while let dependency = pending.popLast() {
             guard seen.insert(dependency).inserted else { continue }
             guard let own = reasons[dependency] else {
-                result.append("it depends on \(dependency), which has no recording")
+                missing.append(dependency)
                 continue
             }
-            if !own.isEmpty { result.append("it depends on \(dependency), which is impacted") }
+            if !own.isEmpty { impacted.append(dependency) }
             pending += dependencies(dependency)
         }
-        return result.sorted()
+        return (impacted.sorted(), missing.sorted())
     }
 
     /// Whether the analysis could use `recording`, and why its test needs to run, given the
     /// snapshot of the build it was recorded in and of the builds there are now.
     static func assess(
-        _ recording: Recording, recordedIn recorded: Snapshot?, current: [Snapshot]
-    ) -> (usable: Bool, reasons: [String]) {
+        _ recording: Recording, recordedIn recorded: Snapshot?, current: [Snapshot],
+        conformanceChanges: (Snapshot, Snapshot) -> ConformanceChanges = {
+            ConformanceChanges(from: $0.index, to: $1.index)
+        }
+    ) -> (usable: Bool, reasons: Reasons) {
         guard let recorded else {
-            return (false, ["it was recorded in a build that wasn't analyzed"])
+            return (false, Reasons(unusable: "it was recorded in a build that wasn't analyzed"))
         }
         guard let now = current.first(where: { $0.configuration == recorded.configuration }) else {
-            return (false, ["its build configuration, \(recorded.configuration), is gone"])
+            return (
+                false,
+                Reasons(unusable: "its build configuration, \(recorded.configuration), is gone")
+            )
         }
         let footprint = recorded.index.footprint(
             of: recording.functions, sources: recording.declaredIn.map { [$0] } ?? [])
         if footprint.unattributed > 0 {
-            return (false, ["it ran code its build couldn't attribute to a file"])
+            return (false, Reasons(unusable: "it ran code its build couldn't attribute to a file"))
         }
-        let changedFiles = footprint.changes(in: now.index).map(recorded.index.fileID(ofObject:))
-        let changedConformances = footprint.uses(
-            recorded.index.allConformances.symmetricDifference(now.index.allConformances))
         return (
             true,
-            changedFiles.sorted().map { "\($0) changed" }
-                + changedConformances.map { "\(describe(conformance: $0)) came or went" }
+            Reasons(
+                changedFiles: footprint.changes(in: now.index).map(recorded.index.fileID(ofObject:))
+                    .sorted(),
+                changedConformances: conformanceChanges(recorded, now).used(by: footprint))
         )
     }
 }
