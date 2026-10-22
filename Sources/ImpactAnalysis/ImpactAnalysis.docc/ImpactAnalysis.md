@@ -10,7 +10,7 @@ SwiftImpact learns what each test actually exercises, by watching it run. After 
 
 - **Driven by what runs, not by guesses.** It doesn't infer dependencies from imports or file names; it records the code each test executed, down to the source file.
 - **Driven by what the compiler built.** It compares compiled output, so it notices when an edit in one file changes the meaning of code in another, and usually ignores edits, such as to comments, that change nothing the compiler emits.
-- **Safe by default.** When in doubt it selects. The kinds of change it can't see are listed in <doc:Limitations>, and a conformance suite checks it against a growing catalog of edits.
+- **Safe by default.** When in doubt, it runs the test. The kinds of change it can't see are listed in <doc:Limitations>, and a conformance suite checks it against a growing catalog of edits.
 - **Harness-neutral.** A "test" is any unit of work your runner names: a test case, a snapshot, a benchmark.
 - **Plain SwiftPM.** No build plugins, daemons, or project changes beyond a compiler flag for the code under test.
 
@@ -27,11 +27,6 @@ SwiftImpact learns what each test actually exercises, by watching it run. After 
 - <doc:HowItWorks>
 - <doc:Limitations>
 
-### Indexing a build
+### Analyzing a build
 
-- ``BuildIndex``
-
-### Recording and selecting
-
-- ``Footprint``
-- ``ImpactGraph``
+- ``ImpactAnalysis/ImpactAnalysis``

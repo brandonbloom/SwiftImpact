@@ -3,59 +3,59 @@ import ImpactCase
 import ImpactProbe
 import Units
 
-// Harness <out.json> [<unit> | --parallel | --pause <milliseconds>]
-//   Runs every unit in this process: in order, pausing between units if asked, or all at once on
-//   threads of their own, each starting 20 ms after the one before. Or runs only `unit`. Writes what each returned and the name hashes of
-//   the functions it ran.
+// Harness <out.json> shared [<pause milliseconds>]
+// Harness <out.json> isolated <unit>
+// Harness <out.json> parallel
+//   Runs every unit in this process, in order, pausing between units if asked; or only `unit`;
+//   or every unit at once on threads of their own, each starting 20 ms after the one before.
+//   Records each unit as the test `<unit>@<mode>`, and writes what each returned.
 
-struct Record: Encodable {
+struct Output: Encodable {
     let unit: String
     let output: String
-    let functions: [UInt64]
-    let sources: [String]
 }
 
-final class Records: @unchecked Sendable {
+final class Outputs: @unchecked Sendable {
     private let lock = NSLock()
-    private(set) var all: [Record] = []
+    private(set) var all: [Output] = []
 
-    func append(_ record: Record) {
-        lock.withLock { all.append(record) }
+    func append(_ output: Output) {
+        lock.withLock { all.append(output) }
     }
 }
 
-func measure(_ unit: ImpactCase.Unit, into records: Records) {
-    let probe = try! ImpactProbe()
+let arguments = Array(CommandLine.arguments.dropFirst())
+let mode = arguments[1]
+let outputs = Outputs()
+
+func run(_ unit: ImpactCase.Unit) {
+    let probe = ImpactProbe.start(test: "\(unit.name)@\(mode)", declaredIn: unit.fileID)
     let output = unit.run()
-    records.append(
-        Record(
-            unit: unit.name, output: output, functions: probe.executed(), sources: [unit.fileID]))
+    probe.stop()
+    outputs.append(Output(unit: unit.name, output: output))
 }
 
-let arguments = Array(CommandLine.arguments.dropFirst())
-try ImpactProbe.check()
-let records = Records()
-switch arguments.dropFirst().first {
-case "--parallel":
+switch mode {
+case "shared":
+    let pause = arguments.count > 2 ? UInt32(arguments[2])! * 1000 : 0
+    for unit in units {
+        run(unit)
+        usleep(pause)
+    }
+case "isolated":
+    for unit in units where unit.name == arguments[2] { run(unit) }
+case "parallel":
     let group = DispatchGroup()
     for (index, unit) in units.enumerated() {
         group.enter()
         Thread.detachNewThread {
             usleep(UInt32(index) * 20_000)
-            measure(unit, into: records)
+            run(unit)
             group.leave()
         }
     }
     group.wait()
-case "--pause":
-    let pause = UInt32(arguments[2])! * 1000
-    for unit in units {
-        measure(unit, into: records)
-        usleep(pause)
-    }
-case let name?:
-    for unit in units where unit.name == name { measure(unit, into: records) }
-case nil:
-    for unit in units { measure(unit, into: records) }
+default:
+    fatalError("unknown mode \(mode)")
 }
-try JSONEncoder().encode(records.all).write(to: URL(filePath: arguments[0]))
+try JSONEncoder().encode(outputs.all).write(to: URL(filePath: arguments[0]))

@@ -33,7 +33,7 @@ struct Workspace {
     /// Builds the harness with `-profile-generate`, and returns its path.
     func build() throws -> URL {
         try command(
-            "swift", "build", "--product", "Harness", "-Xswiftc", "-profile-generate",
+            ["swift", "build", "--product", "Harness"] + ImpactAnalysis.buildArguments,
             in: directory)
         let binPath = try command("swift", "build", "--show-bin-path", in: directory)
         return URL(filePath: binPath.trimmingCharacters(in: .whitespacesAndNewlines))
@@ -49,20 +49,19 @@ struct Workspace {
         try BuildIndex(swiftPMBuild: buildDirectory)
     }
 
-    /// What one unit returned in a run, and what it ran.
-    struct Record: Decodable {
+    /// What one unit returned in a run.
+    struct Output: Decodable {
         let unit: String
         let output: String
-        let functions: [UInt64]
-        let sources: [String]
     }
 
-    /// Runs the harness at `harness` with `arguments`, which choose the units and how they run.
-    func run(_ harness: URL, arguments: [String] = []) throws -> [Record] {
-        let out = directory.appending(path: "records.json")
+    /// Runs the harness at `harness` with `arguments`, which choose the units and how they run,
+    /// recording them into the build.
+    func run(_ harness: URL, arguments: [String]) throws -> [Output] {
+        let out = directory.appending(path: "outputs.json")
         try command(
             [harness.path, out.path] + arguments, in: directory,
-            environment: ["LLVM_PROFILE_FILE": directory.appending(path: "default.profraw").path])
-        return try JSONDecoder().decode([Record].self, from: Data(contentsOf: out))
+            environment: ImpactAnalysis.environment(for: buildDirectory))
+        return try JSONDecoder().decode([Output].self, from: Data(contentsOf: out))
     }
 }

@@ -1,78 +1,87 @@
 # Adopting SwiftImpact
 
-Record what each unit runs, then select the units a later build may affect.
+Teach your test harness to skip the tests a change can't affect.
 
 ## Overview
 
-Adopting SwiftImpact means changing two places: the process that runs your tests links `ImpactProbe` to record each one, and the harness that launches it uses this module to decide what to run. The harness supplies three things only it knows: what a unit is, any files a unit depends on that the probe can't see, and whether a unit passed.
+SwiftImpact answers one question for your harness: *does this test's last result still hold for the code as it's built now?* It records what each test runs, and compares that with each new build.
 
-### Build the process under test with instrumentation
+You change two places:
+- **The process that runs your tests** records each test. It links `ImpactProbe`.
+- **Your harness** builds, asks which tests need to run, and runs them. It uses `ImpactAnalysis`.
 
-Build every target whose code units may run with LLVM's instrumentation:
+They can be the same process.
 
-```sh
-swift build -Xswiftc -profile-generate
-```
+### Identify your tests
 
-The probe reads the instrumentation's counters in memory and never needs a profile file. The profiling runtime still writes one when the process exits, to `default.profraw` in its working directory, so point `LLVM_PROFILE_FILE` somewhere disposable when launching it.
+SwiftImpact keeps track of tests by an identifier you choose: any string, as long as it's the same from run to run. Include anything that changes what the test does. If a snapshot test renders on several devices, `"CardView/iPhone"` and `"CardView/iPad"` are different tests.
 
-### Record each unit
+### Build for recording
 
-Link `ImpactProbe` into the process under test. Create a probe as each unit starts, and ask it what ran when the unit ends:
-
-```swift
-let probe = try ImpactProbe()
-runTheUnit()
-let functions = probe.executed()
-```
-
-Units can run in parallel, in one process or many. A unit's functions include whatever else ran in its process meanwhile, so units that overlap select each other's changes too; separate processes keep them apart. Before calling `executed()`, wait for any work the unit started. Send `functions` to the harness however suits it, such as a JSON file per unit.
-
-If creating the probe throws, the process can't be measured: run the unit regardless, and show the error's description to say why. `ImpactProbe.check()` answers the same question up front.
-
-### Resolve recordings to footprints
-
-After the run, index the build the units ran in, and resolve each unit's recording to a ``Footprint``:
+SwiftImpact learns what a test runs from counters the compiler adds on request. Add ``ImpactAnalysis/ImpactAnalysis/buildArguments`` when building the code under test:
 
 ```swift
-let index = try BuildIndex(swiftPMBuild: URL(filePath: ".build"))
-let footprint = index.footprint(
-    of: functions, sources: ["Module/DeclaringFile.swift"])
+let arguments = ["build", "--scratch-path", ".build/impact"] + ImpactAnalysis.buildArguments
 ```
 
-Name in `sources` the `#fileID` of each file the unit depends on whether or not it runs instrumented code there. At least name the file declaring the unit: code that macros generate, such as a `#Preview` body or a `@Test` function's registration, has no counters.
+Give these builds a scratch path of their own, as above; otherwise switching the arguments on and off rebuilds everything.
 
-### Keep an impact graph
+### Record each test
 
-An ``ImpactGraph`` holds the footprints of the units that passed, and what it needs from the build they ran in. It's `Codable`, so the harness can store it between runs:
+In the process that runs your tests, record each test from start to finish:
 
 ```swift
-var graph = ImpactGraph(index: index, footprints: passed)
-try JSONEncoder().encode(graph).write(to: graphURL)
+import ImpactProbe
+
+let probe = ImpactProbe.start(test: test.id, declaredIn: test.fileID)
+test.run()
+probe.stop()
 ```
 
-After a later run, record the footprints of the units that passed, and forget the units that failed so they run again:
+- **`declaredIn`** is the `#fileID` of the file declaring the test, such as `"MyModule/ParserTests.swift"`. Code that macros generate, like a `#Preview` body, isn't counted, so SwiftImpact relies on you for it. In Swift Testing, it's `Test.current?.sourceLocation.fileID`.
+- **Wait for the test's work to finish before stopping,** including work on other threads. What runs after `stop()` isn't recorded.
+- **Tests can run in parallel.** A recording includes everything that ran in its process meanwhile, so overlapping tests each pick up the others' dependencies. That runs some tests needlessly, never too few. Separate processes keep them apart.
+
+Recordings are saved in the build directory, where your harness finds them. Probes record nothing unless the process was launched as the next section describes, so the same test code runs normally everywhere else.
+
+### Run what needs running
+
+In your harness, after building, analyze the build and ask about each test:
 
 ```swift
-graph.record(passed, in: index)
-for unit in failed {
-    graph.forget(unit)
+import ImpactAnalysis
+
+let build = URL(filePath: ".build/impact")
+let analysis = try ImpactAnalysis.analyze(build)
+
+let toRun = allTests.filter { test in
+    guard let reason = analysis.reasonToRun(test.id) else { return false }
+    print("\(test.id): \(reason)")  // For example: "MyModule/Parser.swift changed".
+    return true
 }
 ```
 
-Recording keeps the footprints of units that didn't run, so a run of only the selected units leaves the graph complete.
-
-### Select
-
-After the next build, index it and ask the stored graph which units it affects:
+Then launch the process that runs your tests with ``ImpactAnalysis/ImpactAnalysis/environment(for:)`` added to its environment, so its recordings are saved where the next analysis looks:
 
 ```swift
-let affected = graph.affected(in: try BuildIndex(swiftPMBuild: build))
-for (unit, reasons) in affected {
-    print(unit, reasons)  // The changed objects and conformances that selected it.
-}
+process.environment = ProcessInfo.processInfo.environment
+    .merging(ImpactAnalysis.environment(for: build)) { $1 }
 ```
 
-``ImpactGraph/affected(in:)`` only knows the units in the graph. Run, too:
-- units the graph lacks, such as new ones and ones that last failed;
-- every unit, when the environment changed (see <doc:Limitations>).
+Analyze before every run. Each analysis takes stock of the build its run is about to use, which is what lets the next one make sense of that run's recordings.
+
+### Decide what to do about failures
+
+A `nil` reason means a test's last result still holds, whether it passed or failed. If your harness keeps results, it can report the last one. If it doesn't, run the tests that failed last time as well.
+
+### When something goes wrong
+
+SwiftImpact fails toward running tests:
+- A test it has never seen, or whose recording it can't make sense of, needs to run.
+- Clearing the build directory clears SwiftImpact's state too, and every test runs.
+- If ``ImpactAnalysis/ImpactAnalysis/analyze(_:)`` throws, run every test, and show the error to say why.
+- If the process under test isn't built for recording, recording does nothing, and its tests run next time.
+
+### Keep running everything somewhere
+
+SwiftImpact can't see some kinds of change, such as to resources and to code that isn't instrumented; <doc:Limitations> lists them. Keep a full run, such as in CI before merging, to catch what it can't.

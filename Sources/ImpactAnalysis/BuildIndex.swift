@@ -2,7 +2,7 @@ import Foundation
 
 /// The object files of one build: each one's fingerprint, and which one defines each instrumented
 /// function.
-public struct BuildIndex: Sendable {
+package struct BuildIndex: Codable, Sendable {
     /// Each object's fingerprint, by path relative to the build directory.
     package private(set) var fingerprints: [String: String]
     /// The objects that define each function, by name hash. A function defined in several is
@@ -32,17 +32,26 @@ public struct BuildIndex: Sendable {
         self.types = types
     }
 
+    /// The `#fileID` of the source file compiled to the object at `path`, or the object's name if
+    /// the index doesn't know it.
+    func fileID(ofObject path: String) -> String {
+        sources.first { $0.value == path }?.key ?? URL(filePath: path).lastPathComponent
+    }
+
     /// Every conformance in the build.
     var allConformances: Set<String> { Set(conformances.values.joined()) }
 
-    /// Indexes the SwiftPM build in `buildDirectory`, such as `.build`.
-    public init(swiftPMBuild buildDirectory: URL) throws {
-        try self.init(objects: Self.swiftPMObjects(in: buildDirectory), relativeTo: buildDirectory)
+    /// Indexes the SwiftPM build in `buildDirectory`, such as `.build`: every configuration, or
+    /// only `configuration`, such as `Debug`.
+    package init(swiftPMBuild buildDirectory: URL, configuration: String? = nil) throws {
+        try self.init(
+            objects: Self.swiftPMObjects(in: buildDirectory, configuration: configuration),
+            relativeTo: buildDirectory)
     }
 
     /// Indexes `objects`, naming them relative to `root`. Each object's directory may hold a
     /// `<Module>-OutputFileMap.json`, as SwiftPM writes, which gives the source file of each.
-    public init(objects: [URL], relativeTo root: URL) throws {
+    init(objects: [URL], relativeTo root: URL) throws {
         self.init()
         let prefix = root.standardizedFileURL.path + "/"
         func relative(_ url: URL) -> String {
@@ -94,15 +103,21 @@ public struct BuildIndex: Sendable {
     /// The per-source-file objects of a SwiftPM build in `buildDirectory`, such as `.build`.
     ///
     /// SwiftPM links each module through one prelinked object, but compiles each source file to
-    /// an object of its own under `out/Intermediates.noindex`. Those are what this returns.
-    static func swiftPMObjects(in buildDirectory: URL) -> [URL] {
+    /// an object of its own under `out/Intermediates.noindex/<Package>.build/<configuration>`.
+    /// Those are what this returns, for every configuration or only `configuration`.
+    static func swiftPMObjects(in buildDirectory: URL, configuration: String? = nil) -> [URL] {
+        let fileManager = FileManager.default
         let intermediates = buildDirectory.appending(path: "out/Intermediates.noindex")
-        guard
-            let enumerator = FileManager.default.enumerator(
-                at: intermediates, includingPropertiesForKeys: nil)
-        else { return [] }
-        return enumerator.compactMap { $0 as? URL }.filter {
-            $0.pathExtension == "o" && $0.path.contains("/Objects-normal/")
+        let packages =
+            (try? fileManager.contentsOfDirectory(
+                at: intermediates, includingPropertiesForKeys: nil))
+            ?? []
+        return packages.filter { $0.pathExtension == "build" }.flatMap { package in
+            let root = configuration.map { package.appending(path: $0) } ?? package
+            let enumerator = fileManager.enumerator(at: root, includingPropertiesForKeys: nil)
+            return (enumerator?.compactMap { $0 as? URL } ?? []).filter {
+                $0.pathExtension == "o" && $0.path.contains("/Objects-normal/")
+            }
         }
     }
 
@@ -112,7 +127,7 @@ public struct BuildIndex: Sendable {
     /// The harness names the sources it knows a unit depends on, such as the file that declares
     /// it. Code from macro expansions, such as a `#Preview` body, isn't instrumented, so it never
     /// shows up as a function that ran.
-    public func footprint(of functions: some Sequence<UInt64>, sources: [String] = [])
+    func footprint(of functions: some Sequence<UInt64>, sources: [String] = [])
         -> Footprint
     {
         var footprint = Footprint()

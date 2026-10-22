@@ -8,19 +8,12 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "Greeting.o"
-            ],
+            "reason" : "Units\/Greeting.swift changed",
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -28,19 +21,12 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "Greeting.o"
-            ],
+            "reason" : "Units\/Greeting.swift changed",
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -48,19 +34,12 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "Greeting.o"
-            ],
+            "reason" : "Units\/Greeting.swift changed",
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -75,19 +54,11 @@
         "isolated" : [
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -95,19 +66,11 @@
         "parallel" : [
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -115,19 +78,11 @@
         "shared" : [
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -142,19 +97,12 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "_$s5Units3TagVs23CustomStringConvertibleAAMc"
-            ],
+            "reason" : "the conformance Units.Tag : Swift.CustomStringConvertible came or went",
             "selected" : true,
             "unit" : "describes-tag"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -162,19 +110,12 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "_$s5Units3TagVs23CustomStringConvertibleAAMc"
-            ],
+            "reason" : "the conformance Units.Tag : Swift.CustomStringConvertible came or went",
             "selected" : true,
             "unit" : "describes-tag"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -182,19 +123,12 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "_$s5Units3TagVs23CustomStringConvertibleAAMc"
-            ],
+            "reason" : "the conformance Units.Tag : Swift.CustomStringConvertible came or went",
             "selected" : true,
             "unit" : "describes-tag"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -209,19 +143,12 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "Greeting.o"
-            ],
+            "reason" : "Library\/Greeting.swift changed",
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -229,19 +156,12 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Greeting.o"
-            ],
+            "reason" : "Library\/Greeting.swift changed",
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -249,19 +169,12 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "Greeting.o"
-            ],
+            "reason" : "Library\/Greeting.swift changed",
             "selected" : true,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -276,28 +189,16 @@
         "isolated" : [
           {
             "changed" : false,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "warms"
           },
           {
             "changed" : false,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "reads"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -305,28 +206,16 @@
         "parallel" : [
           {
             "changed" : false,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "warms"
           },
           {
             "changed" : false,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "reads"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -334,28 +223,16 @@
         "shared" : [
           {
             "changed" : false,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "warms"
           },
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "reads"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -370,28 +247,18 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Banner.o"
-            ],
+            "reason" : "Units\/Banner.swift changed",
             "selected" : true,
             "unit" : "first"
           },
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Banner.o"
-            ],
+            "reason" : "Units\/Banner.swift changed",
             "selected" : true,
             "unit" : "second"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -399,28 +266,18 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Banner.o"
-            ],
+            "reason" : "Units\/Banner.swift changed",
             "selected" : true,
             "unit" : "first"
           },
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Banner.o"
-            ],
+            "reason" : "Units\/Banner.swift changed",
             "selected" : true,
             "unit" : "second"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -428,28 +285,18 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Banner.o"
-            ],
+            "reason" : "Units\/Banner.swift changed",
             "selected" : true,
             "unit" : "first"
           },
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Banner.o"
-            ],
+            "reason" : "Units\/Banner.swift changed",
             "selected" : true,
             "unit" : "second"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -464,19 +311,12 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "Location.o"
-            ],
+            "reason" : "Units\/Location.swift changed",
             "selected" : true,
             "unit" : "locates"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -484,19 +324,12 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "Location.o"
-            ],
+            "reason" : "Units\/Location.swift changed",
             "selected" : true,
             "unit" : "locates"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -504,19 +337,12 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 4,
-            "reasons" : [
-              "Location.o"
-            ],
+            "reason" : "Units\/Location.swift changed",
             "selected" : true,
             "unit" : "locates"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -531,19 +357,11 @@
         "isolated" : [
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -551,19 +369,11 @@
         "parallel" : [
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -571,19 +381,11 @@
         "shared" : [
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "greets"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -598,19 +400,12 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Model.o"
-            ],
+            "reason" : "Units\/Model.swift changed",
             "selected" : true,
             "unit" : "reads-count"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -618,19 +413,12 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Model.o"
-            ],
+            "reason" : "Units\/Model.swift changed",
             "selected" : true,
             "unit" : "reads-count"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -638,19 +426,12 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Model.o"
-            ],
+            "reason" : "Units\/Model.swift changed",
             "selected" : true,
             "unit" : "reads-count"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -665,19 +446,12 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Compute.o"
-            ],
+            "reason" : "Units\/Compute.swift changed",
             "selected" : true,
             "unit" : "computes"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -685,19 +459,12 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Compute.o"
-            ],
+            "reason" : "Units\/Compute.swift changed",
             "selected" : true,
             "unit" : "computes"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -705,19 +472,12 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Compute.o"
-            ],
+            "reason" : "Units\/Compute.swift changed",
             "selected" : true,
             "unit" : "computes"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -732,28 +492,18 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Callers.o"
-            ],
+            "reason" : "Units\/Callers.swift changed",
             "selected" : true,
             "unit" : "describes-int"
           },
           {
             "changed" : false,
-            "footprint" : 5,
-            "reasons" : [
-              "Callers.o"
-            ],
+            "reason" : "Units\/Callers.swift changed",
             "selected" : true,
             "unit" : "describes-string"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -761,28 +511,18 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Callers.o"
-            ],
+            "reason" : "Units\/Callers.swift changed",
             "selected" : true,
             "unit" : "describes-int"
           },
           {
             "changed" : false,
-            "footprint" : 5,
-            "reasons" : [
-              "Callers.o"
-            ],
+            "reason" : "Units\/Callers.swift changed",
             "selected" : true,
             "unit" : "describes-string"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -790,28 +530,18 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Callers.o"
-            ],
+            "reason" : "Units\/Callers.swift changed",
             "selected" : true,
             "unit" : "describes-int"
           },
           {
             "changed" : false,
-            "footprint" : 5,
-            "reasons" : [
-              "Callers.o"
-            ],
+            "reason" : "Units\/Callers.swift changed",
             "selected" : true,
             "unit" : "describes-string"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -826,28 +556,17 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Value.o"
-            ],
+            "reason" : "Units\/Value.swift changed",
             "selected" : true,
             "unit" : "early"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "late"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -855,28 +574,17 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 8,
-            "reasons" : [
-              "Value.o"
-            ],
+            "reason" : "Units\/Value.swift changed",
             "selected" : true,
             "unit" : "early"
           },
           {
             "changed" : false,
-            "footprint" : 6,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "late"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -884,28 +592,17 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Value.o"
-            ],
+            "reason" : "Units\/Value.swift changed",
             "selected" : true,
             "unit" : "early"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "late"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -920,19 +617,12 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Settings.o"
-            ],
+            "reason" : "Units\/Settings.swift changed",
             "selected" : true,
             "unit" : "reads-size"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -940,19 +630,12 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Settings.o"
-            ],
+            "reason" : "Units\/Settings.swift changed",
             "selected" : true,
             "unit" : "reads-size"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -960,19 +643,12 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-              "Settings.o"
-            ],
+            "reason" : "Units\/Settings.swift changed",
             "selected" : true,
             "unit" : "reads-size"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -987,19 +663,11 @@
         "isolated" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "shows-tag"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -1007,19 +675,11 @@
         "parallel" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "shows-tag"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
@@ -1027,19 +687,11 @@
         "shared" : [
           {
             "changed" : true,
-            "footprint" : 5,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "shows-tag"
           },
           {
             "changed" : false,
-            "footprint" : 4,
-            "reasons" : [
-
-            ],
             "selected" : false,
             "unit" : "adds"
           }
