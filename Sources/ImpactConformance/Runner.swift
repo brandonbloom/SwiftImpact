@@ -1,5 +1,5 @@
 import Foundation
-import SwiftImpact
+import ImpactAnalysis
 
 /// How units share processes when they run.
 public enum Mode: String, Codable, CodingKeyRepresentable, CaseIterable, Sendable {
@@ -92,7 +92,7 @@ public struct Runner: Sendable {
                 uniqueKeysWithValues: records.map {
                     ($0.unit, before.footprint(of: $0.functions, sources: $0.sources))
                 })
-            let affected = Ledger(index: before, footprints: footprints).affected(in: after)
+            let affected = ImpactGraph(index: before, footprints: footprints).affected(in: after)
             result.units[mode] = records.map {
                 UnitResult(
                     unit: $0.unit, changed: outputs[mode]![$0.unit] != $0.output,

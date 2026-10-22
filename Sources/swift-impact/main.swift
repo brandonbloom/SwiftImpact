@@ -1,5 +1,5 @@
 import Foundation
-import SwiftImpact
+import ImpactAnalysis
 
 // swift-impact footprints <build-dir> <recordings-dir> <footprints.json>
 //   Indexes the build's objects and resolves each recording, a JSON file of
@@ -8,9 +8,9 @@ import SwiftImpact
 // swift-impact select <build-dir> <footprints.json>
 //   Prints each unit whose footprint changed in the build, and why, then a summary.
 
-func index(_ build: String) throws -> ObjectIndex {
+func index(_ build: String) throws -> BuildIndex {
     let root = URL(filePath: build, directoryHint: .isDirectory)
-    return try ObjectIndex(objects: ObjectIndex.swiftPMObjects(in: root), relativeTo: root)
+    return try BuildIndex(swiftPMBuild: root)
 }
 
 struct Recording: Decodable {
@@ -23,7 +23,7 @@ let arguments = CommandLine.arguments.dropFirst()
 switch (arguments.first, arguments.count) {
 case ("fingerprint", _):
     for path in arguments.dropFirst() {
-        let index = try ObjectIndex(objects: [URL(filePath: path)], relativeTo: URL(filePath: "/"))
+        let index = try BuildIndex(objects: [URL(filePath: path)], relativeTo: URL(filePath: "/"))
         print(index.fingerprints.first!.value, path)
     }
 case ("footprints", 4):
@@ -39,7 +39,7 @@ case ("footprints", 4):
     }
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-    try encoder.encode(Ledger(index: index, footprints: footprints))
+    try encoder.encode(ImpactGraph(index: index, footprints: footprints))
         .write(to: URL(filePath: args[3]))
     let sizes = footprints.values.map(\.objects.count).sorted()
     print(
@@ -49,14 +49,14 @@ case ("footprints", 4):
 case ("select", 3):
     let args = Array(arguments)
     let index = try index(args[1])
-    let ledger = try JSONDecoder().decode(
-        Ledger.self, from: Data(contentsOf: URL(filePath: args[2])))
-    let affected = ledger.affected(in: index)
+    let graph = try JSONDecoder().decode(
+        ImpactGraph.self, from: Data(contentsOf: URL(filePath: args[2])))
+    let affected = graph.affected(in: index)
     for (unit, reasons) in affected.sorted(by: { $0.key < $1.key }) {
         let short = reasons.map { ($0 as NSString).lastPathComponent }
         print("\(unit)\t\(short.joined(separator: " "))")
     }
-    print("selected \(affected.count) of \(ledger.footprints.count)")
+    print("selected \(affected.count) of \(graph.footprints.count)")
 default:
     FileHandle.standardError.write(
         Data(

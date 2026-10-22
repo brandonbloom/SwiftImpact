@@ -1,5 +1,5 @@
 import Foundation
-import SwiftImpact
+import ImpactAnalysis
 
 /// A case's package on disk, built instrumented, with the units' harness.
 struct Workspace {
@@ -45,9 +45,8 @@ struct Workspace {
         try FileManager.default.removeItem(at: buildDirectory)
     }
 
-    func index() throws -> ObjectIndex {
-        try ObjectIndex(
-            objects: ObjectIndex.swiftPMObjects(in: buildDirectory), relativeTo: buildDirectory)
+    func index() throws -> BuildIndex {
+        try BuildIndex(swiftPMBuild: buildDirectory)
     }
 
     /// What one unit returned in a run, and what it ran.

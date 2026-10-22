@@ -1,31 +1,16 @@
 # SwiftImpact
 
-Skip tests a change can't affect, for Swift.
+Run only the tests a change can affect.
 
-> **Experimental.** Unpublished, and its interfaces will change. See [docs/coverage-plan.md](docs/coverage-plan.md) for how its safety is to be tested.
+> **Experimental.** Unpublished, and its interfaces will change.
 
-A unit of work, such as a test or a snapshot render, runs in a process built with `-profile-generate`. `ImpactProbe` records which functions it runs. `SwiftImpact` maps those functions to the per-source-file objects of a SwiftPM build and fingerprints the objects. A later build can then tell which units it may change:
-- units whose objects changed;
-- units that read globals defined in changed objects;
-- units that use types whose protocol conformances came or went.
+SwiftImpact learns what each test exercises by watching it run. After a change, it tells your test runner which tests could now behave differently, and why; the runner skips the rest. It compares what the compiler built rather than source text, so it notices an edit in one file that changes the meaning of another, and it errs toward running a test when in doubt.
 
-```swift
-// In the process under test, around each unit:
-try ImpactProbe.check()
-ImpactProbe.reset()
-runTheUnit()
-let functions = ImpactProbe.executed()
+It's for suites whose tests are expensive, such as snapshot, UI, and integration tests, built with SwiftPM. A "test" is whatever unit of work your runner names.
 
-// In the harness, after the run:
-let index = try ObjectIndex(objects: ObjectIndex.swiftPMObjects(in: build), relativeTo: build)
-let footprint = index.footprint(of: functions, sources: ["Module/DeclaringFile.swift"])
-let ledger = Ledger(index: index, footprints: [unit: footprint])
+## Documentation
 
-// Before the next run:
-let affected = ledger.affected(in: try ObjectIndex(objects: …, relativeTo: build))
-```
-
-Counters are per process, so measure one unit at a time.
+`swift package docs` builds the DocC documentation, with a guide to adopting SwiftImpact, how it works, and its limitations, into one archive, and prints how to browse it. Xcode's Product › Build Documentation works too.
 
 ## Conformance
 
