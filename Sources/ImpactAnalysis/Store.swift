@@ -84,14 +84,13 @@ struct Store {
                 continue
             }
             if let previous = latest[recording.test] {
-                let (older, newer) =
-                    previous.recording.time < recording.time
-                    ? (previous.url, (recording, url)) : (url, previous)
-                try? FileManager.default.removeItem(at: older)
-                latest[recording.test] = newer
-            } else {
-                latest[recording.test] = (recording, url)
+                if previous.recording.time >= recording.time {
+                    try? FileManager.default.removeItem(at: url)
+                    continue
+                }
+                try? FileManager.default.removeItem(at: previous.url)
             }
+            latest[recording.test] = (recording, url)
         }
         return latest.mapValues(\.recording)
     }
