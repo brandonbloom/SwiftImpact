@@ -31,7 +31,7 @@ let analysis = try ImpactAnalysis.analyze(buildDirectory)
 let toRun = allTests.filter { analysis.isImpacted($0.id) }
 ```
 
-The [documentation](https://brandonbloom.github.io/SwiftImpact/documentation/) walks through adoption, explains how it works, and lists what it can't see.
+The [documentation](https://www.brandonbloom.name/SwiftImpact/documentation/) walks through adoption, explains how it works, and lists what it can't see.
 
 ## Developing
 
